@@ -164,6 +164,8 @@ client_Main.prototype = {
 		console.log("tempValue: " + tempValue);
 		var tempJsLog = window.document.querySelector("#jsLog");
 		tempJsLog.innerText += "\n _BUILD_TARGET: " + client_Main._BUILD_TARGET;
+		tempJsLog.innerText += "\n _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING;
+		tempJsLog.innerText += "\n _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING;
 		tempJsLog.innerText += "\n tempValue: " + tempValue;
 	}
 };
@@ -252,10 +254,10 @@ Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
 client_Main._BUILD_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,9,48,59);
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,10,44,15);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,9,48,59);
+	var _this = new Date(2016,2,14,10,44,15);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

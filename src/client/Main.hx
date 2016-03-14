@@ -105,11 +105,13 @@ class Main
     #if js
     var tempJsLog = Browser.document.querySelector('#jsLog');
 
-    tempJsLog.innerText += '\n _BUILD_TARGET: ' + _BUILD_TARGET;
+    tempJsLog.innerText += '\n _BUILD_TARGET: $_BUILD_TARGET';
+    tempJsLog.innerText += '\n _COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING';
+    tempJsLog.innerText += '\n _LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING';
 
     //because we increment tempValue only in a debug build
     //tempValue will be 3 for debug but 2 for release
-    tempJsLog.innerText += '\n tempValue: ' + tempValue;
+    tempJsLog.innerText += '\n tempValue: $tempValue';
     #end
   }
 }
