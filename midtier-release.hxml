@@ -1,0 +1,9 @@
+midtier-common.hxml
+
+--no-traces
+
+#php target
+-php bin/release/midtier
+
+-cmd rm -rfv midtier/midtier/*
+-cmd ditto bin/release/midtier midtier

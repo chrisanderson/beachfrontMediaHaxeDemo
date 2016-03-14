@@ -1,0 +1,8 @@
+midtier-common.hxml
+
+#php target
+-php bin/debug/midtier
+-debug
+
+-cmd rm -rfv midtier/midtier/*
+-cmd ditto bin/debug/midtier midtier

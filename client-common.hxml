@@ -1,0 +1,13 @@
+common.hxml
+
+#declaring what libs i'd like to use
+#-lib jQueryExtern
+-lib minject
+#-lib mmvc
+#-lib ufront-orm
+-lib tink_core
+
+#declaring my apps main entry (i tend to name it Main, but that's not mandatory)
+-main client.Main
+
+--each

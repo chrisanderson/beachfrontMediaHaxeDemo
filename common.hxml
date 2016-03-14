@@ -1,0 +1,12 @@
+#declaring what folder is my source
+-cp src
+
+#dce = dead code elimination
+#dce options = no std full
+-dce std
+
+#--display
+--times
+
+#--help-defines
+-version

@@ -1,0 +1,18 @@
+client-common.hxml
+
+-swf bin/debug/client/swf/main.swf
+#fdb flag is required to have haxe use flash debugger
+#-D fdb
+-debug
+
+-cmd rm -rfv swf/*
+-cmd ditto bin/debug/client/swf swf
+
+--next
+
+-js bin/debug/client/js/main.js
+-D source-map-content
+-debug
+
+-cmd rm -rfv js/*
+-cmd ditto bin/debug/client/js js

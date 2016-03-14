@@ -1,0 +1,16 @@
+{
+  "name": "lib",
+  "version": "1.0.0",
+  "description": "test33",
+  "main": "index.js",
+  "repository": {},
+  "dependencies": {},
+  "devDependencies": {
+    "swfobject-npm": "^2.3.0-1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Anderson",
+  "license": "ISC"
+}
