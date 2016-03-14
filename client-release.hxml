@@ -15,3 +15,7 @@ client-common.hxml
 
 -cmd rm -rfv js/*
 -cmd ditto bin/release/client/js js
+
+--next
+
+-cmd echo 'client-release'

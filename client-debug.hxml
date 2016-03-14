@@ -19,3 +19,7 @@ client-common.hxml
 
 -cmd rm -rfv js/*
 -cmd ditto bin/debug/client/js js
+
+--next
+
+-cmd echo 'client-debug'

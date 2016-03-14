@@ -140,18 +140,33 @@ client_Main.prototype = {
 	_init: function() {
 		var tempFlashVars = { };
 		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
-		var tempAppTitle = window.document.querySelector(".app-title");
+		var tempAppTitle = $(".app-title");
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
-		tempAppTitle.innerText += "\n [last compile date-time " + DateTools.format(client_Main._COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]";
+		tempAppTitle.append("<br> [last compile date-time " + DateTools.format(client_Main._COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
 		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 300, 10, null, tempFlashVars, tempSwfParams);
 		window.console.log("this will only appear in the debug version of the js output");
 		var tempValue = 1;
 		tempValue++;
-		var tempJsLog = window.document.querySelector("#jsLog");
-		tempJsLog.innerText += "\n _BUILD_TARGET: " + client_Main._BUILD_TARGET;
-		tempJsLog.innerText += "\n _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING;
-		tempJsLog.innerText += "\n _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING;
-		tempJsLog.innerText += "\n tempValue: " + tempValue;
+		var tempJsLog = $("#jsLog");
+		tempJsLog.append("<br> _BUILD_TARGET: " + client_Main._BUILD_TARGET);
+		tempJsLog.append("<br> _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING);
+		tempJsLog.append("<br> _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING);
+		tempJsLog.append("<br> tempValue: " + tempValue);
+		try {
+			null;
+		} catch( error ) {
+			if (error instanceof js__$Boot_HaxeError) error = error.val;
+			null;
+		}
+		try {
+			null;
+		} catch( error1 ) {
+			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
+			var tempErrorMessage = "error message thrown for trace";
+			var tempError = null;
+			tempError = new Error("" + client_Main._COMPILE_TARGET + ": " + tempErrorMessage);
+			throw tempError;
+		}
 	}
 };
 var js__$Boot_HaxeError = function(val) {
@@ -239,10 +254,10 @@ Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
 client_Main._BUILD_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,11,5,41);
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,17,6,11);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,11,5,41);
+	var _this = new Date(2016,2,14,17,6,11);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

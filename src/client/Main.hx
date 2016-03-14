@@ -1,6 +1,11 @@
 package client;
 
+#if flash
+import flash.errors.Error;
+#end
+
 #if js
+import js.Error;
 import js.Browser;
 import jQuery.*;
 #end
@@ -118,5 +123,32 @@ class Main
     //tempValue will be 3 for debug but 2 for release
     tempJsLog.append('<br> tempValue: $tempValue');
     #end
+
+    var tempErrorMessage = 'error message thrown for trace';
+    var tempError = null;
+
+    #if flash
+    tempError = new Error('$_COMPILE_TARGET: $tempErrorMessage');
+    #elseif js
+    tempError = new Error('$_COMPILE_TARGET: $tempErrorMessage');
+    #end
+
+    //does this still blow up flash?
+    try
+    {
+      trace('$_COMPILE_TARGET: trace inside of a try catch statement might cause a meltdown in flash. without throw. in try block');
+    }
+    catch(error:Dynamic){}
+
+    try
+    {
+      trace('$_COMPILE_TARGET: trace inside of a try catch statement might cause a meltdown in flash. with throw. in try block');
+
+      throw tempError;
+    }
+    catch(error:Dynamic)
+    {
+      trace('$_COMPILE_TARGET: trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block');
+    }
   }
 }
