@@ -13,7 +13,7 @@ client_Main.prototype = {
 	_init: function() {
 		console.log("init()");
 		var tempFlashVars = { };
-		var tempSwfParams = { bgcolor : "#eeeeee"};
+		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
 		console.log({ 'tempFlashVars' : tempFlashVars});
 		console.log({ 'tempSwfParams' : tempSwfParams});
 		var tempSwfContainer = window.document.querySelector("#swfContainer");

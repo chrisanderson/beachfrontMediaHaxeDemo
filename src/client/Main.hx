@@ -34,7 +34,15 @@ class Main
     trace('init()');
 
     var tempFlashVars = {};
-    var tempSwfParams = {bgcolor:"#eeeeee"};
+    var tempSwfParams =
+    {
+      menu:"false"
+      ,scale:"noScale"
+      ,allowFullscreen:"true"
+      ,allowScriptAccess:"always"
+      ,bgcolor:"#eeeeee"
+      ,wmode:"direct"
+    };
 
     //these will trace to all targets (currently just flash and js)
     trace({'tempFlashVars':tempFlashVars});
