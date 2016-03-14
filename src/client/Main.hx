@@ -8,6 +8,7 @@ import js.Browser;
 class Main
 {
   public static var COMPILE_TARGET = 'unkown hinson';
+  public static var COMPILE_DATE_TIME = CompileTime.buildDate().toString();
 
   public static function main()
   {
@@ -17,7 +18,10 @@ class Main
     COMPILE_TARGET = 'flash';
     #end
 
-    trace('main() COMPILE_TARGET: $COMPILE_TARGET');
+    trace('COMPILE_TARGET: $COMPILE_TARGET');
+    trace('COMPILE_DATE_TIME: $COMPILE_DATE_TIME');
+
+    trace('main()');
 
     var mainInstance = new Main();
   }
@@ -57,7 +61,7 @@ class Main
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
-    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, 400, 300, 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
+    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "100%", 300, 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
 
     //haxe's ability to remove traces won't remove direct calls to console Browser.console.log()
     //but i added a gulp task to strip debug calls for the release target
@@ -85,7 +89,7 @@ class Main
 
     //because we increment tempValue only in a debug build
     //tempValue will be 3 for debug but 2 for release
-    tempJsLog.innerText += 'tempValue: ' + tempValue;
+    tempJsLog.innerText += '\n tempValue: ' + tempValue;
     #end
   }
 }
