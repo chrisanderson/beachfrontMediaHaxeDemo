@@ -2,6 +2,7 @@ package client;
 
 #if js
 import js.Browser;
+import jQuery.*;
 #end
 
 using DateTools;
@@ -68,14 +69,16 @@ class Main
     //this only occurs when the js target is being compiled because of the compiler instructions #if js
     //will blow up other targets like flash if the compiler instructions were not used
     #if js
-    var tempAppTitle = Browser.document.querySelector('.app-title');
+    var tempAppTitle = new JQuery('.app-title');
     var tempSwfContainer = Browser.document.querySelector('#swfContainer');
 
     trace({'tempAppTitle':tempAppTitle});
     trace({'tempSwfContainer':tempSwfContainer});
 
     //you can use methods etc using string interpolation using the ${} syntax
-    tempAppTitle.innerText += '\n [last compile date-time ${_COMPILE_DATE_TIME.format("%m/%d/%Y %r")}]';
+    //also notice .format() at the end of the string.
+    //it's available as a method because of static extension and i have using DateTools; at the top of this file
+    tempAppTitle.append('<br> [last compile date-time ${_COMPILE_DATE_TIME.format("%m/%d/%Y %r")}]');
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
@@ -103,15 +106,17 @@ class Main
     trace("tempValue: " + tempValue);
 
     #if js
-    var tempJsLog = Browser.document.querySelector('#jsLog');
+    var tempJsLog = new JQuery('#jsLog');
 
-    tempJsLog.innerText += '\n _BUILD_TARGET: $_BUILD_TARGET';
-    tempJsLog.innerText += '\n _COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING';
-    tempJsLog.innerText += '\n _LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING';
+    trace({'tempJsLog':tempJsLog});
+
+    tempJsLog.append('<br> _BUILD_TARGET: $_BUILD_TARGET');
+    tempJsLog.append('<br> _COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING');
+    tempJsLog.append('<br> _LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING');
 
     //because we increment tempValue only in a debug build
     //tempValue will be 3 for debug but 2 for release
-    tempJsLog.innerText += '\n tempValue: $tempValue';
+    tempJsLog.append('<br> tempValue: $tempValue');
     #end
   }
 }

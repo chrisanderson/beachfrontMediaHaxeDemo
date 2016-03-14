@@ -149,11 +149,11 @@ client_Main.prototype = {
 		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
 		console.log({ 'tempFlashVars' : tempFlashVars});
 		console.log({ 'tempSwfParams' : tempSwfParams});
-		var tempAppTitle = window.document.querySelector(".app-title");
+		var tempAppTitle = $(".app-title");
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
 		console.log({ 'tempAppTitle' : tempAppTitle});
 		console.log({ 'tempSwfContainer' : tempSwfContainer});
-		tempAppTitle.innerText += "\n [last compile date-time " + DateTools.format(client_Main._COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]";
+		tempAppTitle.append("<br> [last compile date-time " + DateTools.format(client_Main._COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
 		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 300, 10, null, tempFlashVars, tempSwfParams);
 		window.console.log("this will only appear in the debug version of the js output");
 		var tempValue = 1;
@@ -162,11 +162,12 @@ client_Main.prototype = {
 		console.log("tempValue: " + tempValue);
 		tempValue++;
 		console.log("tempValue: " + tempValue);
-		var tempJsLog = window.document.querySelector("#jsLog");
-		tempJsLog.innerText += "\n _BUILD_TARGET: " + client_Main._BUILD_TARGET;
-		tempJsLog.innerText += "\n _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING;
-		tempJsLog.innerText += "\n _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING;
-		tempJsLog.innerText += "\n tempValue: " + tempValue;
+		var tempJsLog = $("#jsLog");
+		console.log({ 'tempJsLog' : tempJsLog});
+		tempJsLog.append("<br> _BUILD_TARGET: " + client_Main._BUILD_TARGET);
+		tempJsLog.append("<br> _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING);
+		tempJsLog.append("<br> _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING);
+		tempJsLog.append("<br> tempValue: " + tempValue);
 	}
 };
 var js__$Boot_HaxeError = function(val) {
@@ -254,10 +255,10 @@ Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
 client_Main._BUILD_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,10,44,15);
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,12,43,16);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,10,44,15);
+	var _this = new Date(2016,2,14,12,43,16);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

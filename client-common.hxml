@@ -1,7 +1,7 @@
 common.hxml
 
 #declaring what libs i'd like to use
-#-lib jQueryExtern
+-lib jQueryExtern
 -lib minject
 #-lib mmvc
 #-lib ufront-orm
