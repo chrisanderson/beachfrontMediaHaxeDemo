@@ -4,22 +4,27 @@ package client;
 import js.Browser;
 #end
 
+using DateTools;
+
 @:expose
 class Main
 {
-  public static var COMPILE_TARGET = 'unkown hinson';
-  public static var COMPILE_DATE_TIME = CompileTime.buildDate().toString();
+  private static var _COMPILE_TARGET = 'unkown hinson';
+  private static var _COMPILE_DATE_TIME = CompileTime.buildDate();
+  private static var _COMPILE_DATE_TIME_STRING = CompileTime.buildDate().toString();
+  private static var _LAST_RUN_DATE_TIME_STRING = Date.now().toString();
 
   public static function main()
   {
     #if js
-    COMPILE_TARGET = 'js';
+    _COMPILE_TARGET = 'js';
     #elseif flash
-    COMPILE_TARGET = 'flash';
+    _COMPILE_TARGET = 'flash';
     #end
 
-    trace('COMPILE_TARGET: $COMPILE_TARGET');
-    trace('COMPILE_DATE_TIME: $COMPILE_DATE_TIME');
+    trace('_COMPILE_TARGET: $_COMPILE_TARGET');
+    trace('_COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING');
+    trace('_LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING');
 
     trace('main()');
 
@@ -55,9 +60,14 @@ class Main
     //this only occurs when the js target is being compiled because of the compiler instructions #if js
     //will blow up other targets like flash if the compiler instructions were not used
     #if js
+    var tempAppTitle = Browser.document.querySelector('.app-title');
     var tempSwfContainer = Browser.document.querySelector('#swfContainer');
 
+    trace({'tempAppTitle':tempAppTitle});
     trace({'tempSwfContainer':tempSwfContainer});
+
+    //you can use methods etc using string interpolation using the ${} syntax
+    tempAppTitle.innerText += '\n [last compile date-time ${_COMPILE_DATE_TIME.format("%m/%d/%Y %r")}]';
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
