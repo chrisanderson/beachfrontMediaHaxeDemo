@@ -134,7 +134,9 @@ var client_Main = $hx_exports.client.Main = function() {
 client_Main.__name__ = true;
 client_Main.main = function() {
 	client_Main._COMPILE_TARGET = "js";
+	client_Main._BUILD_TARGET = "debug";
 	console.log("_COMPILE_TARGET: " + client_Main._COMPILE_TARGET);
+	console.log("_BUILD_TARGET: " + client_Main._BUILD_TARGET);
 	console.log("_COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING);
 	console.log("_LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING);
 	console.log("main()");
@@ -161,6 +163,7 @@ client_Main.prototype = {
 		tempValue++;
 		console.log("tempValue: " + tempValue);
 		var tempJsLog = window.document.querySelector("#jsLog");
+		tempJsLog.innerText += "\n _BUILD_TARGET: " + client_Main._BUILD_TARGET;
 		tempJsLog.innerText += "\n tempValue: " + tempValue;
 	}
 };
@@ -248,10 +251,11 @@ String.__name__ = true;
 Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,0,9,1);
+client_Main._BUILD_TARGET = "unkown hinson";
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,9,48,59);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,0,9,1);
+	var _this = new Date(2016,2,14,9,48,59);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

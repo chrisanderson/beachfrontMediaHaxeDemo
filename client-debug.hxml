@@ -1,7 +1,9 @@
 client-common.hxml
 
 -swf bin/debug/client/swf/main.swf
+
 #fdb flag is required to have haxe use flash debugger
+#will also cause the onscreen swf logging to be hidden but will be visible in the debug console or flashlog.txt
 #-D fdb
 -debug
 
@@ -11,6 +13,7 @@ client-common.hxml
 --next
 
 -js bin/debug/client/js/main.js
+
 -D source-map-content
 -debug
 

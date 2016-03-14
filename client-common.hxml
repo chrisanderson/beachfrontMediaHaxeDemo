@@ -11,4 +11,5 @@ common.hxml
 #declaring my apps main entry (i tend to name it Main, but that's not mandatory)
 -main client.Main
 
+#all the instructions above will be applied to any instructions following
 --each

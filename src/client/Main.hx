@@ -10,6 +10,7 @@ using DateTools;
 class Main
 {
   private static var _COMPILE_TARGET = 'unkown hinson';
+  private static var _BUILD_TARGET = 'unkown hinson';
   private static var _COMPILE_DATE_TIME = CompileTime.buildDate();
   private static var _COMPILE_DATE_TIME_STRING = CompileTime.buildDate().toString();
   private static var _LAST_RUN_DATE_TIME_STRING = Date.now().toString();
@@ -22,7 +23,14 @@ class Main
     _COMPILE_TARGET = 'flash';
     #end
 
+    #if debug
+    _BUILD_TARGET = 'debug';
+    #elseif !debug
+    _BUILD_TARGET = 'release';
+    #end
+
     trace('_COMPILE_TARGET: $_COMPILE_TARGET');
+    trace('_BUILD_TARGET: $_BUILD_TARGET');
     trace('_COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING');
     trace('_LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING');
 
@@ -96,6 +104,8 @@ class Main
 
     #if js
     var tempJsLog = Browser.document.querySelector('#jsLog');
+
+    tempJsLog.innerText += '\n _BUILD_TARGET: ' + _BUILD_TARGET;
 
     //because we increment tempValue only in a debug build
     //tempValue will be 3 for debug but 2 for release
