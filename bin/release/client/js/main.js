@@ -152,20 +152,19 @@ client_Main.prototype = {
 		tempJsLog.append("<br> _COMPILE_DATE_TIME_STRING: " + client_Main._COMPILE_DATE_TIME_STRING);
 		tempJsLog.append("<br> _LAST_RUN_DATE_TIME_STRING: " + client_Main._LAST_RUN_DATE_TIME_STRING);
 		tempJsLog.append("<br> tempValue: " + tempValue);
+		var tempErrorMessage = "error message thrown for trace";
+		var tempError = null;
+		tempError = new Error("" + client_Main._COMPILE_TARGET + ": " + tempErrorMessage);
 		try {
 			null;
 		} catch( error ) {
 			if (error instanceof js__$Boot_HaxeError) error = error.val;
-			null;
 		}
 		try {
-			null;
+			throw tempError;
 		} catch( error1 ) {
 			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
-			var tempErrorMessage = "error message thrown for trace";
-			var tempError = null;
-			tempError = new Error("" + client_Main._COMPILE_TARGET + ": " + tempErrorMessage);
-			throw tempError;
+			null;
 		}
 	}
 };
@@ -254,10 +253,10 @@ Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
 client_Main._BUILD_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,17,6,11);
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,17,15,47);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,17,6,11);
+	var _this = new Date(2016,2,14,17,15,47);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

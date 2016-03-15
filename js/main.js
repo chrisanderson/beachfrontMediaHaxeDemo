@@ -128,6 +128,7 @@ StringTools.lpad = function(s,c,l) {
 	return s;
 };
 var client_Main = $hx_exports.client.Main = function() {
+	this._currentDateTime = new Date();
 	console.log("new()");
 	this._init();
 };
@@ -144,16 +145,24 @@ client_Main.main = function() {
 };
 client_Main.prototype = {
 	_init: function() {
+		var _g = this;
 		console.log("init()");
 		var tempFlashVars = { };
 		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
 		console.log({ 'tempFlashVars' : tempFlashVars});
 		console.log({ 'tempSwfParams' : tempSwfParams});
 		var tempAppTitle = $(".app-title");
+		var tempCurrentDateTime = $(".current-date-time");
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
 		console.log({ 'tempAppTitle' : tempAppTitle});
+		console.log({ 'tempCurrentDateTime' : tempCurrentDateTime});
 		console.log({ 'tempSwfContainer' : tempSwfContainer});
 		tempAppTitle.append("<br> [last compile date-time " + DateTools.format(client_Main._COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
+		var timeTimer = new haxe_Timer(1000);
+		timeTimer.run = function() {
+			_g._currentDateTime = new Date();
+			tempCurrentDateTime.text("[current date-time " + DateTools.format(_g._currentDateTime,"%m/%d/%Y %r") + "]");
+		};
 		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 300, 10, null, tempFlashVars, tempSwfParams);
 		window.console.log("this will only appear in the debug version of the js output");
 		var tempValue = 1;
@@ -183,6 +192,17 @@ client_Main.prototype = {
 			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
 			console.log("" + client_Main._COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block");
 		}
+	}
+};
+var haxe_Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+haxe_Timer.__name__ = true;
+haxe_Timer.prototype = {
+	run: function() {
 	}
 };
 var js__$Boot_HaxeError = function(val) {
@@ -270,10 +290,10 @@ Array.__name__ = true;
 Date.__name__ = ["Date"];
 client_Main._COMPILE_TARGET = "unkown hinson";
 client_Main._BUILD_TARGET = "unkown hinson";
-client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,17,14,49);
+client_Main._COMPILE_DATE_TIME = new Date(2016,2,14,22,9,24);
 client_Main._COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,14,17,14,49);
+	var _this = new Date(2016,2,14,22,9,24);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

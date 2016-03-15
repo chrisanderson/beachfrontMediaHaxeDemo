@@ -1,5 +1,7 @@
 package client;
 
+import haxe.Timer;
+
 #if flash
 import flash.errors.Error;
 #end
@@ -20,6 +22,8 @@ class Main
   private static var _COMPILE_DATE_TIME = CompileTime.buildDate();
   private static var _COMPILE_DATE_TIME_STRING = CompileTime.buildDate().toString();
   private static var _LAST_RUN_DATE_TIME_STRING = Date.now().toString();
+
+  private var _currentDateTime = Date.now();
 
   public static function main()
   {
@@ -75,15 +79,25 @@ class Main
     //will blow up other targets like flash if the compiler instructions were not used
     #if js
     var tempAppTitle = new JQuery('.app-title');
+    var tempCurrentDateTime = new JQuery('.current-date-time');
     var tempSwfContainer = Browser.document.querySelector('#swfContainer');
 
     trace({'tempAppTitle':tempAppTitle});
+    trace({'tempCurrentDateTime':tempCurrentDateTime});
     trace({'tempSwfContainer':tempSwfContainer});
 
     //you can use methods etc using string interpolation using the ${} syntax
     //also notice .format() at the end of the string.
     //it's available as a method because of static extension and i have using DateTools; at the top of this file
     tempAppTitle.append('<br> [last compile date-time ${_COMPILE_DATE_TIME.format("%m/%d/%Y %r")}]');
+
+    var timeTimer = new Timer(1000);
+    timeTimer.run = function()
+    {
+      _currentDateTime = Date.now();
+
+      tempCurrentDateTime.text('[current date-time ${_currentDateTime.format("%m/%d/%Y %r")}]');
+    }
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
