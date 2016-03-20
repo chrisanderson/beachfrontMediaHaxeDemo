@@ -109,10 +109,7 @@ var common_client_BuildInfo = function() {
 $hxClasses["common.client.BuildInfo"] = common_client_BuildInfo;
 common_client_BuildInfo.__name__ = ["common","client","BuildInfo"];
 common_client_BuildInfo.prototype = {
-	get_currentDateTime: function() {
-		return this.currentDateTime;
-	}
-	,_init: function() {
+	_init: function() {
 		common_client_BuildInfo.COMPILE_TARGET = "js";
 		common_client_BuildInfo.BUILD_TARGET = "debug";
 		console.log("COMPILE_TARGET: " + common_client_BuildInfo.COMPILE_TARGET);
@@ -127,7 +124,6 @@ var common_client_Main = $hx_exports.common.client.Main = function() {
 	console.log("new()");
 	this._init();
 	this._initInjector();
-	this._initUI();
 };
 $hxClasses["common.client.Main"] = common_client_Main;
 common_client_Main.__name__ = ["common","client","Main"];
@@ -148,7 +144,7 @@ common_client_Main.prototype = {
 		console.log({ 'tempAppTitle' : tempAppTitle});
 		console.log({ 'tempCurrentDateTime' : tempCurrentDateTime});
 		console.log({ 'tempSwfContainer' : tempSwfContainer});
-		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 300, 10, null, tempFlashVars, tempSwfParams);
+		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 600, 10, null, tempFlashVars, tempSwfParams);
 		window.console.log("this will only appear in the debug version of the js output");
 		var tempValue = 1;
 		console.log("tempValue: " + tempValue);
@@ -166,6 +162,7 @@ common_client_Main.prototype = {
 		console.log("_initInjector()");
 		this._mainInjector.mapSingleton(common_client_BuildInfo);
 		this._app = this._mainInjector.instantiate(js_client_App);
+		this._initUI();
 	}
 	,_initUI: function() {
 		console.log("_initUI()");
@@ -698,10 +695,10 @@ Date.__name__ = ["Date"];
 var __map_reserved = {}
 common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,19,22,54,33);
+common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,20,17,2,54);
 common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,19,22,54,33);
+	var _this = new Date(2016,2,20,17,2,54);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

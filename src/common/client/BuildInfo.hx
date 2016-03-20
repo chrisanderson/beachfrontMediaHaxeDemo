@@ -16,11 +16,6 @@ class BuildInfo
     _init();
   }
 
-  public function get_currentDateTime():Date
-  {
-    return currentDateTime;
-  }
-
   private function _init():Void
   {
     #if js

@@ -1,8 +1,11 @@
 package common.client;
 
 #if flash
+import flash.display.MovieClip;
+import flash.Lib;
 import flash.client.App;
 import flash.display.Sprite;
+import flash.events.Event;
 #elseif js
 import js.client.App;
 import jQuery.*;
@@ -12,10 +15,11 @@ import js.Browser;
 import minject.Injector;
 import haxe.Timer;
 
-using DateTools;
-
+#if js
 @:expose
-class Main #if flash extends Sprite #end
+#end
+@:keep
+class Main #if flash extends MovieClip #end
 {
   private var _mainInjector = new Injector();
 
@@ -42,7 +46,6 @@ class Main #if flash extends Sprite #end
 
     _init();
     _initInjector();
-    _initUI();
   }
 
   private function _init():Void
@@ -59,6 +62,8 @@ class Main #if flash extends Sprite #end
       ,allowScriptAccess:"always"
       ,bgcolor:"#eeeeee"
       ,wmode:"direct"
+      //,width:"300"
+      //,height:"300"
     };
 
     //these will trace to all targets (currently just flash and js)
@@ -83,11 +88,27 @@ class Main #if flash extends Sprite #end
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
-    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "100%", 300, 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
+    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "100%", 600, 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
 
     //haxe's ability to remove traces won't remove direct calls to console Browser.console.log()
     //but i added a gulp task to strip debug calls for the release target
     Browser.console.log("this will only appear in the debug version of the js output");
+    #elseif flash
+    trace('stageWidth: ' + Lib.current.stage.stageWidth + ' stageHeight: ' + Lib.current.stage.stageHeight);
+
+    //give this sprite display content so we can add real dimensions
+    graphics.clear();
+    graphics.beginFill(0xff0000, 0);
+    graphics.drawRect(0, 0, Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+    graphics.endFill();
+
+    width = Lib.current.stage.stageWidth;
+    height = Lib.current.stage.stageHeight;
+
+    trace('width: ' + width + ' height: ' + height);
+
+    Lib.current.stage.addChild(this);
+    Lib.current.stage.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage, false, 0, true);
     #end
 
     //#if (flash || js)
@@ -166,9 +187,17 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapSingleton(BuildInfo);
 
     #if flash
+    //_app = new App();
+    //_mainInjector.injectInto(_app);
+
     _app = _mainInjector.instantiate(App);
+
+    _initUI();//fix here this should be called in _onAddedToStage
     #elseif js
+    //_app = new App();
     _app = _mainInjector.instantiate(App);
+
+    _initUI();
     #end
   }
 
@@ -180,4 +209,15 @@ class Main #if flash extends Sprite #end
     addChild(_app);
     #end
   }
+
+  #if flash
+  private function _onAddedToStage(event:Event):Void
+  {
+    trace('_onAddedToStage()');
+
+    Lib.current.stage.removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
+
+    _initUI();
+  }
+  #end
 }

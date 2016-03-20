@@ -103,10 +103,7 @@ var common_client_BuildInfo = function() {
 $hxClasses["common.client.BuildInfo"] = common_client_BuildInfo;
 common_client_BuildInfo.__name__ = ["common","client","BuildInfo"];
 common_client_BuildInfo.prototype = {
-	get_currentDateTime: function() {
-		return this.currentDateTime;
-	}
-	,_init: function() {
+	_init: function() {
 		common_client_BuildInfo.COMPILE_TARGET = "js";
 		common_client_BuildInfo.BUILD_TARGET = "release";
 		null;
@@ -141,8 +138,8 @@ common_client_Main.prototype = {
 		var tempError = null;
 	}
 	,_initInjector: function() {
-		this._mainInjector.mapSingletonOf(common_client_BuildInfo,common_client_BuildInfo);
-		this._mainInjector.instantiate(common_client_BuildInfo);
+		this._mainInjector.mapSingleton(common_client_BuildInfo);
+		this._app = this._mainInjector.instantiate(js_client_App);
 	}
 	,_initUI: function() {
 		null;
@@ -229,6 +226,13 @@ js_Boot.__nativeClassName = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
+var js_client_App = function() {
+};
+$hxClasses["js.client.App"] = js_client_App;
+js_client_App.__name__ = ["js","client","App"];
+js_client_App.prototype = {
+	__class__: js_client_App
+};
 var minject_ClassMap = function() {
 	this.map = new haxe_ds_StringMap();
 };
@@ -283,7 +287,11 @@ var minject_Injector = function() {
 $hxClasses["minject.Injector"] = minject_Injector;
 minject_Injector.__name__ = ["minject","Injector"];
 minject_Injector.prototype = {
-	mapSingletonOf: function(whenAskedFor,useSingletonOf,named) {
+	mapSingleton: function(whenAskedFor,named) {
+		if(named == null) named = "";
+		return this.mapSingletonOf(whenAskedFor,whenAskedFor,named);
+	}
+	,mapSingletonOf: function(whenAskedFor,useSingletonOf,named) {
 		if(named == null) named = "";
 		var config = this.getMapping(whenAskedFor,named);
 		config.setResult(new minject_result_InjectSingletonResult(useSingletonOf));
@@ -571,10 +579,10 @@ Date.__name__ = ["Date"];
 var __map_reserved = {}
 common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,19,22,25,54);
+common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,20,0,31,56);
 common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,19,22,25,54);
+	var _this = new Date(2016,2,20,0,31,56);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
