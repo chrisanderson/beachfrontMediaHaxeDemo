@@ -3,13 +3,15 @@ common.hxml
 #declaring what libs i'd like to use
 -lib jQueryExtern
 -lib minject
-#-lib mmvc
-#-lib ufront-orm
+-lib msignal
 -lib tink_core
+-lib tink_http
+-lib tink_url
+-lib tink_xml
 -lib compiletime
 
 #declaring my apps main entry (i tend to name it Main, but that's not mandatory)
--main client.Main
+-main common.client.Main
 
 #all the instructions above will be applied to any instructions following
 --each

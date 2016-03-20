@@ -3,7 +3,7 @@
 
 #dce = dead code elimination
 #dce options = no std full
--dce std
+-dce full
 
 #--display
 --times

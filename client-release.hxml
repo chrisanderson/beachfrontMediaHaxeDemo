@@ -1,17 +1,17 @@
 client-common.hxml
 
---no-traces
-
 -swf bin/release/client/swf/main.swf
+
+--no-traces
 
 -cmd rm -rfv swf/*
 -cmd ditto bin/release/client/swf swf
 
 --next
 
---no-traces
-
 -js bin/release/client/js/main.js
+
+--no-traces
 
 -cmd rm -rfv js/*
 -cmd ditto bin/release/client/js js
