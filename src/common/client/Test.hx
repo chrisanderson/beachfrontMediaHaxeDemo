@@ -9,10 +9,10 @@ import js.Browser;
 import js.Error;
 #end
 
+@:expose
 class Test
 {
-  @inject
-  public var buildInfo:BuildInfo;
+  @inject public var buildInfo:BuildInfo;
 
   public function new()
   {

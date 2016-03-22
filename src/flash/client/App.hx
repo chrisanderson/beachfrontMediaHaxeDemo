@@ -11,8 +11,7 @@ using DateTools;
 @:keep
 class App extends Sprite
 {
-  @inject
-  public var buildInfo:BuildInfo;
+  @inject public var buildInfo:BuildInfo;
 
   private var _timeTextField:TextField;
 
@@ -72,7 +71,8 @@ class App extends Sprite
     _timeTextField.height = 20;
     _timeTextField.x = Lib.current.stage.width - _timeTextField.width - 15;
     _timeTextField.y = 10;
-    _timeTextField.border = _timeTextField.wordWrap = true;
+    _timeTextField.border = false;
+    _timeTextField.wordWrap = true;
 
     addChild(_timeTextField);
   }

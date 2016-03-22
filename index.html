@@ -23,12 +23,20 @@
 <body>
   <h3>
     <div class="app-title">beachfront media haxe demo</div>
-    <div class="current-date-time"></div>
+    <div class="compile-date-time"></div>
   </h3>
 
-  <div id="jsLog" style="margin-bottom:20px; width:400px;">-- info --</div>
+  <div id="contentContainer" style="display:flex; flex-flow:row; height:1000px;/*vh;*/">
+    <div id="swfContainer">
+      If you see this text the flash code didn't embed correctly.
+    </div>
 
-  <div id="swfContainer">If you see this text the flash code didn't embed correctly.</div>
+    <div id="jsContainer" style="width:50vw; background-color:#ccc; margin-left:10px; padding:10px;">
+      <div id="jsLog" style="margin-bottom:20px;">-- js log --</div>
+
+      <div class="current-date-time"></div>
+    </div>
+  </div>
 
 	<script type="text/javascript" src="js/main.js"></script>
 </body>

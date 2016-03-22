@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "error": 0,
+  "completed_in": "0.092",
+  "msg": "Success",
+  
+  "data": { 
+    "id": "3517",
+    "title": "Wayfare_NewTest",
+    "status": "ENABLED",
+     
+    "settings": { 
+      "autoplay": true,
+      "fixed_size": false,
+      "maintain_16_x_9": true,
+      "width": 830,
+      "height": 460,
+      "use_hover_sound": true, 
+      "start_volume": 0,
+      "loop_content": true,
+      "in_page_player": false,
+      "show_top_title": true,
+      "use_sticky_player": true, 
+      "show_playlist": true,
+      "playlist_position": "BOTTOM",
+      "color": "50a8fa",
+      "logo_image_url": null,
+      "logo_click_url": null,
+      "watermark_image_url": "//user.beachfrontmedia.com/chris/testpages/spLogo.jpeg",
+      "watermark_opacity": 33,
+      "watermark_scale": 10,
+
+      "sticky_settings": {
+				"width": 430,
+				"activate": "BOTH",
+				"placement": "DIV",
+				"div_target": "StickyDiv",
+				"div_position": "TOP",
+				"div_offset": 200,
+				"absolute_position": "TOP_RIGHT",
+				"absolute_vertical_offset": 200,
+				"absolute_horizontal_offset": 200
+      }
+    },
+
+    "player_ad_settings": {
+      "enable_preroll": false,
+      "enable_midroll": false,
+      "enable_postroll": false,
+      "allow_companions": false,
+      "companions_placement": "RELATIVE",
+      "companions_target": "div_id",
+      "companions_position": "BOTTOM",
+      "use_hover_sound": true,
+      "start_volume": 0
+    },
+    
+    "account_ad_settings": {
+      "io_account_id": "1", 
+      "type": "ADSERVER_BF_IO", 
+      "desktop": {
+        "inventory_id": "412b75f3-5d52-4c96-f5ca-e5c6e2470536", 
+        "ad_unit_id": "35b596b4-8651-4439-8ea1-09ee5618a901"
+      },
+      
+      "mobile": {
+        "inventory_id": "9e957683-d0c2-49c6-b731-1bc750b6178b",
+        "ad_unit_id": "58e4c7e5-5879-404d-98ba-639f21ed2be5"
+      }
+    },
+
+    "embed_id": "22ba8080-28c6-4191-93bb-a0c0984f0a80",
+    "publisher_id": 0, 
+    "publisher_name": "BeachFront Media",
+    
+    "debug": { 
+      "vstat_level": 0,
+      "vstat_freq": 0
+    }
+  }
+}

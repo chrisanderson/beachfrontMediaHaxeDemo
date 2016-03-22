@@ -209,7 +209,7 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var common_client_BuildInfo = function() {
+var common_client_BuildInfo = $hx_exports.common.client.BuildInfo = function() {
 	this.currentDateTime = new Date();
 	this._init();
 };
@@ -247,7 +247,7 @@ common_client_Main.prototype = {
 		console.log({ 'tempSwfParams' : tempSwfParams});
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
 		console.log({ 'tempSwfContainer' : tempSwfContainer});
-		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 600, 10, null, tempFlashVars, tempSwfParams);
+		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "50%", "100%", 10, null, tempFlashVars, tempSwfParams);
 	}
 	,_initInjector: function() {
 		console.log("_initInjector()");
@@ -262,7 +262,7 @@ common_client_Main.prototype = {
 	}
 	,__class__: common_client_Main
 };
-var common_client_Test = function() { };
+var common_client_Test = $hx_exports.common.client.Test = function() { };
 $hxClasses["common.client.Test"] = common_client_Test;
 common_client_Test.__name__ = ["common","client","Test"];
 common_client_Test.prototype = {
@@ -446,6 +446,7 @@ var js_client_App = function() {
 	this._jsLogElement = $("#jsLog");
 	this._swfContainerElement = $("#swfContainer");
 	this._currentDateTimeElement = $(".current-date-time");
+	this._compileDateTimeElement = $(".compile-date-time");
 	this._appTitleElement = $(".app-title");
 	this._init();
 };
@@ -461,9 +462,10 @@ js_client_App.prototype = {
 	}
 	,_initUI: function() {
 		console.log({ '_appTitleElement' : this._appTitleElement});
+		console.log({ '_compileDateTimeElement' : this._compileDateTimeElement});
 		console.log({ '_currentDateTimeElement' : this._currentDateTimeElement});
 		console.log({ '_swfContainerElement' : this._swfContainerElement});
-		this._appTitleElement.append("<br> [last compile date-time " + DateTools.format(common_client_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
+		this._compileDateTimeElement.text("[last compile date-time " + DateTools.format(common_client_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
 		window.console.log("this will only appear in the debug version of the js output");
 	}
 	,__class__: js_client_App
@@ -839,10 +841,10 @@ Date.__name__ = ["Date"];
 var __map_reserved = {}
 common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,22,14,27,58);
+common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,22,15,56,3);
 common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,22,14,27,58);
+	var _this = new Date(2016,2,22,15,56,3);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

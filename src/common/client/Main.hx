@@ -78,7 +78,7 @@ class Main #if flash extends Sprite #end
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
     //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
-    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "100%", 600, 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
+    var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "50%", "100%", 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
     #elseif flash
     trace('stageWidth: ' + Lib.current.stage.stageWidth + ' stageHeight: ' + Lib.current.stage.stageHeight);
 
@@ -119,6 +119,8 @@ class Main #if flash extends Sprite #end
     _initUI();
     #end
 
+    //this Test class is intended to test both flash and js at the same time
+    //and can be instantiated outside the conditional compiler that are client side specific
     _mainInjector.instantiate(Test);
   }
 
