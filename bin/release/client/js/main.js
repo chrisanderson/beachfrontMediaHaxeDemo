@@ -114,7 +114,6 @@ var common_client_Main = $hx_exports.common.client.Main = function() {
 	this._mainInjector = new minject_Injector();
 	this._init();
 	this._initInjector();
-	this._initUI();
 };
 $hxClasses["common.client.Main"] = common_client_Main;
 common_client_Main.__name__ = ["common","client","Main"];
@@ -125,11 +124,8 @@ common_client_Main.prototype = {
 	_init: function() {
 		var tempFlashVars = { };
 		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
-		var tempAppTitle = $(".app-title");
-		var tempCurrentDateTime = $(".current-date-time");
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
-		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 300, 10, null, tempFlashVars, tempSwfParams);
-		window.console.log("this will only appear in the debug version of the js output");
+		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 600, 10, null, tempFlashVars, tempSwfParams);
 		var tempValue = 1;
 		tempValue++;
 		var tempJsLog = $("#jsLog");
@@ -140,6 +136,7 @@ common_client_Main.prototype = {
 	,_initInjector: function() {
 		this._mainInjector.mapSingleton(common_client_BuildInfo);
 		this._app = this._mainInjector.instantiate(js_client_App);
+		this._initUI();
 	}
 	,_initUI: function() {
 		null;
@@ -227,11 +224,21 @@ js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
 var js_client_App = function() {
+	this._init();
 };
 $hxClasses["js.client.App"] = js_client_App;
 js_client_App.__name__ = ["js","client","App"];
 js_client_App.prototype = {
-	__class__: js_client_App
+	_init: function() {
+		this._initUI();
+	}
+	,_initUI: function() {
+		var tempAppTitle = $(".app-title");
+		var tempCurrentDateTime = $(".current-date-time");
+		var tempSwfContainer = window.document.querySelector("#swfContainer");
+		window.console.log("this will only appear in the debug version of the js output");
+	}
+	,__class__: js_client_App
 };
 var minject_ClassMap = function() {
 	this.map = new haxe_ds_StringMap();
@@ -579,10 +586,10 @@ Date.__name__ = ["Date"];
 var __map_reserved = {}
 common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,20,0,31,56);
+common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,22,9,49,2);
 common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,20,0,31,56);
+	var _this = new Date(2016,2,22,9,49,2);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

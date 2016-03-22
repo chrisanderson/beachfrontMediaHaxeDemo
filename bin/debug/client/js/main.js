@@ -8,6 +8,79 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var DateTools = function() { };
+$hxClasses["DateTools"] = DateTools;
+DateTools.__name__ = ["DateTools"];
+DateTools.__format_get = function(d,e) {
+	switch(e) {
+	case "%":
+		return "%";
+	case "C":
+		return StringTools.lpad(Std.string(Std["int"](d.getFullYear() / 100)),"0",2);
+	case "d":
+		return StringTools.lpad(Std.string(d.getDate()),"0",2);
+	case "D":
+		return DateTools.__format(d,"%m/%d/%y");
+	case "e":
+		return Std.string(d.getDate());
+	case "F":
+		return DateTools.__format(d,"%Y-%m-%d");
+	case "H":case "k":
+		return StringTools.lpad(Std.string(d.getHours()),e == "H"?"0":" ",2);
+	case "I":case "l":
+		var hour = d.getHours() % 12;
+		return StringTools.lpad(Std.string(hour == 0?12:hour),e == "I"?"0":" ",2);
+	case "m":
+		return StringTools.lpad(Std.string(d.getMonth() + 1),"0",2);
+	case "M":
+		return StringTools.lpad(Std.string(d.getMinutes()),"0",2);
+	case "n":
+		return "\n";
+	case "p":
+		if(d.getHours() > 11) return "PM"; else return "AM";
+		break;
+	case "r":
+		return DateTools.__format(d,"%I:%M:%S %p");
+	case "R":
+		return DateTools.__format(d,"%H:%M");
+	case "s":
+		return Std.string(Std["int"](d.getTime() / 1000));
+	case "S":
+		return StringTools.lpad(Std.string(d.getSeconds()),"0",2);
+	case "t":
+		return "\t";
+	case "T":
+		return DateTools.__format(d,"%H:%M:%S");
+	case "u":
+		var t = d.getDay();
+		if(t == 0) return "7"; else if(t == null) return "null"; else return "" + t;
+		break;
+	case "w":
+		return Std.string(d.getDay());
+	case "y":
+		return StringTools.lpad(Std.string(d.getFullYear() % 100),"0",2);
+	case "Y":
+		return Std.string(d.getFullYear());
+	default:
+		throw new js__$Boot_HaxeError("Date.format %" + e + "- not implemented yet.");
+	}
+};
+DateTools.__format = function(d,f) {
+	var r = new StringBuf();
+	var p = 0;
+	while(true) {
+		var np = f.indexOf("%",p);
+		if(np < 0) break;
+		r.addSub(f,p,np - p);
+		r.add(DateTools.__format_get(d,HxOverrides.substr(f,np + 1,1)));
+		p = np + 2;
+	}
+	r.addSub(f,p,f.length - p);
+	return r.b;
+};
+DateTools.format = function(d,f) {
+	return DateTools.__format(d,f);
+};
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
@@ -18,6 +91,15 @@ HxOverrides.dateStr = function(date) {
 	var mi = date.getMinutes();
 	var s = date.getSeconds();
 	return date.getFullYear() + "-" + (m < 10?"0" + m:"" + m) + "-" + (d < 10?"0" + d:"" + d) + " " + (h < 10?"0" + h:"" + h) + ":" + (mi < 10?"0" + mi:"" + mi) + ":" + (s < 10?"0" + s:"" + s);
+};
+HxOverrides.substr = function(s,pos,len) {
+	if(pos != null && pos != 0 && len != null && len < 0) return "";
+	if(len == null) len = s.length;
+	if(pos < 0) {
+		pos = s.length + pos;
+		if(pos < 0) pos = 0;
+	} else if(len < 0) len = s.length + len - pos;
+	return s.substr(pos,len);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -56,6 +138,31 @@ $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
+};
+Std["int"] = function(x) {
+	return x | 0;
+};
+var StringBuf = function() {
+	this.b = "";
+};
+$hxClasses["StringBuf"] = StringBuf;
+StringBuf.__name__ = ["StringBuf"];
+StringBuf.prototype = {
+	add: function(x) {
+		this.b += Std.string(x);
+	}
+	,addSub: function(s,pos,len) {
+		if(len == null) this.b += HxOverrides.substr(s,pos,null); else this.b += HxOverrides.substr(s,pos,len);
+	}
+	,__class__: StringBuf
+};
+var StringTools = function() { };
+$hxClasses["StringTools"] = StringTools;
+StringTools.__name__ = ["StringTools"];
+StringTools.lpad = function(s,c,l) {
+	if(c.length <= 0) return s;
+	while(s.length < l) s = c + s;
+	return s;
 };
 var Type = function() { };
 $hxClasses["Type"] = Type;
@@ -133,19 +240,33 @@ common_client_Main.main = function() {
 };
 common_client_Main.prototype = {
 	_init: function() {
-		console.log("init()");
+		console.log("_init()");
 		var tempFlashVars = { };
 		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
 		console.log({ 'tempFlashVars' : tempFlashVars});
 		console.log({ 'tempSwfParams' : tempSwfParams});
-		var tempAppTitle = $(".app-title");
-		var tempCurrentDateTime = $(".current-date-time");
 		var tempSwfContainer = window.document.querySelector("#swfContainer");
-		console.log({ 'tempAppTitle' : tempAppTitle});
-		console.log({ 'tempCurrentDateTime' : tempCurrentDateTime});
 		console.log({ 'tempSwfContainer' : tempSwfContainer});
 		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "100%", 600, 10, null, tempFlashVars, tempSwfParams);
-		window.console.log("this will only appear in the debug version of the js output");
+	}
+	,_initInjector: function() {
+		console.log("_initInjector()");
+		this._mainInjector.mapSingleton(common_client_BuildInfo);
+		this._mainInjector.mapSingleton(common_client_Test);
+		this._app = this._mainInjector.instantiate(js_client_App);
+		this._initUI();
+		this._mainInjector.instantiate(common_client_Test);
+	}
+	,_initUI: function() {
+		console.log("_initUI()");
+	}
+	,__class__: common_client_Main
+};
+var common_client_Test = function() { };
+$hxClasses["common.client.Test"] = common_client_Test;
+common_client_Test.__name__ = ["common","client","Test"];
+common_client_Test.prototype = {
+	injectionsReady: function() {
 		var tempValue = 1;
 		console.log("tempValue: " + tempValue);
 		tempValue++;
@@ -157,17 +278,21 @@ common_client_Main.prototype = {
 		tempJsLog.append("<br> tempValue: " + tempValue);
 		var tempErrorMessage = "error message thrown for trace";
 		var tempError = null;
+		tempError = new Error("" + common_client_BuildInfo.COMPILE_TARGET + ": " + tempErrorMessage);
+		try {
+			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. without throw. in try block");
+		} catch( error ) {
+			if (error instanceof js__$Boot_HaxeError) error = error.val;
+		}
+		try {
+			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in try block");
+			throw tempError;
+		} catch( error1 ) {
+			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
+			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block");
+		}
 	}
-	,_initInjector: function() {
-		console.log("_initInjector()");
-		this._mainInjector.mapSingleton(common_client_BuildInfo);
-		this._app = this._mainInjector.instantiate(js_client_App);
-		this._initUI();
-	}
-	,_initUI: function() {
-		console.log("_initUI()");
-	}
-	,__class__: common_client_Main
+	,__class__: common_client_Test
 };
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -318,11 +443,30 @@ js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
 var js_client_App = function() {
+	this._jsLogElement = $("#jsLog");
+	this._swfContainerElement = $("#swfContainer");
+	this._currentDateTimeElement = $(".current-date-time");
+	this._appTitleElement = $(".app-title");
+	this._init();
 };
 $hxClasses["js.client.App"] = js_client_App;
 js_client_App.__name__ = ["js","client","App"];
 js_client_App.prototype = {
-	__class__: js_client_App
+	injectionsReady: function() {
+		if(this._appTitleElement == null) this._initUI();
+	}
+	,_init: function() {
+		console.log("_init()");
+		this._initUI();
+	}
+	,_initUI: function() {
+		console.log({ '_appTitleElement' : this._appTitleElement});
+		console.log({ '_currentDateTimeElement' : this._currentDateTimeElement});
+		console.log({ '_swfContainerElement' : this._swfContainerElement});
+		this._appTitleElement.append("<br> [last compile date-time " + DateTools.format(common_client_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
+		window.console.log("this will only appear in the debug version of the js output");
+	}
+	,__class__: js_client_App
 };
 var minject_ClassMap = function() {
 	this.map = new haxe_ds_StringMap();
@@ -695,10 +839,10 @@ Date.__name__ = ["Date"];
 var __map_reserved = {}
 common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,20,17,2,54);
+common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,22,14,27,58);
 common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,20,17,2,54);
+	var _this = new Date(2016,2,22,14,27,58);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
@@ -708,8 +852,10 @@ common_client_BuildInfo.LAST_RUN_DATE_TIME_STRING = (function($this) {
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
+common_client_Test.__meta__ = { fields : { buildInfo : { type : ["common.client.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
 haxe_IMap.__meta__ = { obj : { 'interface' : null}};
 js_Boot.__toStr = {}.toString;
+js_client_App.__meta__ = { fields : { buildInfo : { type : ["common.client.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
 minject_point_InjectionPoint.__meta__ = { obj : { 'interface' : null}};
 common_client_Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

@@ -26,8 +26,8 @@ class App extends Sprite
   @post //this method is called automatically because of @post metadata
   public function injectionsReady():Void
   {
-    trace({'BuildInfo':BuildInfo});
-    trace({'buildInfo':buildInfo});
+    //trace({'BuildInfo':BuildInfo});
+    //trace({'buildInfo':buildInfo});
 
     if(_timeTextField == null)
     {
