@@ -1,8 +1,10 @@
 package common.client;
 
+import common.client.settings.SettingsModel;
+import common.client.util.BuildInfo;
+
 #if flash
 import flash.errors.Error;
-import common.client.BuildInfo;
 #elseif js
 import jQuery.*;
 import js.Browser;
@@ -10,9 +12,10 @@ import js.Error;
 #end
 
 @:expose
-class Test
+class CommonModel
 {
   @inject public var buildInfo:BuildInfo;
+  @inject public var settingsModel:SettingsModel;
 
   public function new()
   {
@@ -34,6 +37,13 @@ class Test
     //}
     //#end
 
+    //trace('buildInfo: $buildInfo');
+    trace('settingsModel: $settingsModel');
+
+    //settingsVO.settings = ;
+
+    //trace('settingsVO.settings: ${settingsVO.settings}');
+
     var tempValue = 1;
 
     trace("tempValue: " + tempValue);
@@ -54,9 +64,9 @@ class Test
 
     trace({'tempJsLog':tempJsLog});
 
-    //tempJsLog.append('<br> _BUILD_TARGET: $_BUILD_TARGET');
-    //tempJsLog.append('<br> _COMPILE_DATE_TIME_STRING: $_COMPILE_DATE_TIME_STRING');
-    //tempJsLog.append('<br> _LAST_RUN_DATE_TIME_STRING: $_LAST_RUN_DATE_TIME_STRING');
+    tempJsLog.append('<br> BuildInfo.BUILD_TARGET: ${BuildInfo.BUILD_TARGET}');
+    tempJsLog.append('<br> BuildInfo.COMPILE_DATE_TIME_STRING: ${BuildInfo.COMPILE_DATE_TIME_STRING}');
+    tempJsLog.append('<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: ${BuildInfo.LAST_RUN_DATE_TIME_STRING}');
 
     //because we increment tempValue only in a debug build
     //tempValue will be 3 for debug but 2 for release
@@ -77,7 +87,11 @@ class Test
     {
       trace('${BuildInfo.COMPILE_TARGET}: trace inside of a try catch statement might cause a meltdown in flash. without throw. in try block');
     }
-    catch(error:Dynamic){}
+    catch(error:Dynamic)
+    {
+      //this shouldn't be reachable but adding a trace to see if it can blow up flash anyway
+      trace('${BuildInfo.COMPILE_TARGET}: trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block');
+    }
 
     try
     {

@@ -1,10 +1,9 @@
 package flash.client;
 
-import common.client.BuildInfo;
+import common.client.util.BuildInfo;
 import flash.Lib;
 import flash.display.Sprite;
 import flash.text.TextField;
-import flash.errors.Error;
 
 using DateTools;
 

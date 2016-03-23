@@ -1,6 +1,6 @@
 package js.client;
 
-import common.client.BuildInfo;
+import common.client.util.BuildInfo;
 import jQuery.JQuery;
 import js.Browser;
 

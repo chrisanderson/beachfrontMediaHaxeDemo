@@ -1,4 +1,4 @@
-package common.client;
+package common.client.util;
 
 @:keep //protect this class from being removed by dce == full
 @:expose

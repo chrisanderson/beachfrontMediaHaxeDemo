@@ -1,6 +1,7 @@
 (function (console, $hx_exports, $global) { "use strict";
 $hx_exports.common = $hx_exports.common || {};
 $hx_exports.common.client = $hx_exports.common.client || {};
+$hx_exports.common.client.util = $hx_exports.common.client.util || {};
 var $hxClasses = {};
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
@@ -81,6 +82,21 @@ DateTools.__format = function(d,f) {
 DateTools.format = function(d,f) {
 	return DateTools.__format(d,f);
 };
+var EReg = function(r,opt) {
+	opt = opt.split("u").join("");
+	this.r = new RegExp(r,opt);
+};
+$hxClasses["EReg"] = EReg;
+EReg.__name__ = ["EReg"];
+EReg.prototype = {
+	match: function(s) {
+		if(this.r.global) this.r.lastIndex = 0;
+		this.r.m = this.r.exec(s);
+		this.r.s = s;
+		return this.r.m != null;
+	}
+	,__class__: EReg
+};
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
@@ -100,6 +116,45 @@ HxOverrides.substr = function(s,pos,len) {
 		if(pos < 0) pos = 0;
 	} else if(len < 0) len = s.length + len - pos;
 	return s.substr(pos,len);
+};
+var Lambda = function() { };
+$hxClasses["Lambda"] = Lambda;
+Lambda.__name__ = ["Lambda"];
+Lambda.exists = function(it,f) {
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(f(x)) return true;
+	}
+	return false;
+};
+var List = function() {
+	this.length = 0;
+};
+$hxClasses["List"] = List;
+List.__name__ = ["List"];
+List.prototype = {
+	iterator: function() {
+		return new _$List_ListIterator(this.h);
+	}
+	,__class__: List
+};
+var _$List_ListIterator = function(head) {
+	this.head = head;
+	this.val = null;
+};
+$hxClasses["_List.ListIterator"] = _$List_ListIterator;
+_$List_ListIterator.__name__ = ["_List","ListIterator"];
+_$List_ListIterator.prototype = {
+	hasNext: function() {
+		return this.head != null;
+	}
+	,next: function() {
+		this.val = this.head[0];
+		this.head = this.head[1];
+		return this.val;
+	}
+	,__class__: _$List_ListIterator
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -209,22 +264,42 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var common_client_BuildInfo = $hx_exports.common.client.BuildInfo = function() {
-	this.currentDateTime = new Date();
-	this._init();
-};
-$hxClasses["common.client.BuildInfo"] = common_client_BuildInfo;
-common_client_BuildInfo.__name__ = ["common","client","BuildInfo"];
-common_client_BuildInfo.prototype = {
-	_init: function() {
-		common_client_BuildInfo.COMPILE_TARGET = "js";
-		common_client_BuildInfo.BUILD_TARGET = "debug";
-		console.log("COMPILE_TARGET: " + common_client_BuildInfo.COMPILE_TARGET);
-		console.log("BUILD_TARGET: " + common_client_BuildInfo.BUILD_TARGET);
-		console.log("COMPILE_DATE_TIME_STRING: " + common_client_BuildInfo.COMPILE_DATE_TIME_STRING);
-		console.log("LAST_RUN_DATE_TIME_STRING: " + common_client_BuildInfo.LAST_RUN_DATE_TIME_STRING);
+var common_client_CommonModel = $hx_exports.common.client.CommonModel = function() { };
+$hxClasses["common.client.CommonModel"] = common_client_CommonModel;
+common_client_CommonModel.__name__ = ["common","client","CommonModel"];
+common_client_CommonModel.prototype = {
+	injectionsReady: function() {
+		console.log("settingsModel: " + Std.string(this.settingsModel));
+		var tempValue = 1;
+		console.log("tempValue: " + tempValue);
+		tempValue++;
+		console.log("tempValue: " + tempValue);
+		tempValue++;
+		console.log("tempValue: " + tempValue);
+		var tempJsLog = $("#jsLog");
+		console.log({ 'tempJsLog' : tempJsLog});
+		tempJsLog.append("<br> BuildInfo.BUILD_TARGET: " + common_client_util_BuildInfo.BUILD_TARGET);
+		tempJsLog.append("<br> BuildInfo.COMPILE_DATE_TIME_STRING: " + common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING);
+		tempJsLog.append("<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: " + common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING);
+		tempJsLog.append("<br> tempValue: " + tempValue);
+		var tempErrorMessage = "error message thrown for trace";
+		var tempError = null;
+		tempError = new Error("" + common_client_util_BuildInfo.COMPILE_TARGET + ": " + tempErrorMessage);
+		try {
+			console.log("" + common_client_util_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. without throw. in try block");
+		} catch( error ) {
+			if (error instanceof js__$Boot_HaxeError) error = error.val;
+			console.log("" + common_client_util_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block");
+		}
+		try {
+			console.log("" + common_client_util_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in try block");
+			throw tempError;
+		} catch( error1 ) {
+			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
+			console.log("" + common_client_util_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block");
+		}
 	}
-	,__class__: common_client_BuildInfo
+	,__class__: common_client_CommonModel
 };
 var common_client_Main = $hx_exports.common.client.Main = function() {
 	this._mainInjector = new minject_Injector();
@@ -251,52 +326,215 @@ common_client_Main.prototype = {
 	}
 	,_initInjector: function() {
 		console.log("_initInjector()");
-		this._mainInjector.mapSingleton(common_client_BuildInfo);
-		this._mainInjector.mapSingleton(common_client_Test);
+		this._mainInjector.mapSingleton(common_client_util_BuildInfo);
+		this._mainInjector.mapSingleton(common_client_CommonModel);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsVO);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsService);
+		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
 		this._app = this._mainInjector.instantiate(js_client_App);
 		this._initUI();
-		this._mainInjector.instantiate(common_client_Test);
+		this._mainInjector.instantiate(common_client_CommonModel);
+		this._mainInjector.instantiate(common_client_settings_SettingsModel);
+		this._mainInjector.instantiate(common_client_settings_SettingsVO);
+		this._mainInjector.instantiate(common_client_settings_SettingsService);
+		this._mainInjector.instantiate(common_client_util_LoaderService);
 	}
 	,_initUI: function() {
 		console.log("_initUI()");
 	}
 	,__class__: common_client_Main
 };
-var common_client_Test = $hx_exports.common.client.Test = function() { };
-$hxClasses["common.client.Test"] = common_client_Test;
-common_client_Test.__name__ = ["common","client","Test"];
-common_client_Test.prototype = {
-	injectionsReady: function() {
-		var tempValue = 1;
-		console.log("tempValue: " + tempValue);
-		tempValue++;
-		console.log("tempValue: " + tempValue);
-		tempValue++;
-		console.log("tempValue: " + tempValue);
-		var tempJsLog = $("#jsLog");
-		console.log({ 'tempJsLog' : tempJsLog});
-		tempJsLog.append("<br> tempValue: " + tempValue);
-		var tempErrorMessage = "error message thrown for trace";
-		var tempError = null;
-		tempError = new Error("" + common_client_BuildInfo.COMPILE_TARGET + ": " + tempErrorMessage);
-		try {
-			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. without throw. in try block");
-		} catch( error ) {
-			if (error instanceof js__$Boot_HaxeError) error = error.val;
-		}
-		try {
-			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in try block");
-			throw tempError;
-		} catch( error1 ) {
-			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
-			console.log("" + common_client_BuildInfo.COMPILE_TARGET + ": trace inside of a try catch statement might cause a meltdown in flash. with throw. in catch block");
-		}
+var common_client_settings_SettingsVO = function() { };
+$hxClasses["common.client.settings.SettingsVO"] = common_client_settings_SettingsVO;
+common_client_settings_SettingsVO.__name__ = ["common","client","settings","SettingsVO"];
+common_client_settings_SettingsVO.prototype = {
+	set_settings: function(value) {
+		if(this.settings == null) this.settings = value;
+		return this.settings;
 	}
-	,__class__: common_client_Test
+	,__class__: common_client_settings_SettingsVO
+	,__properties__: {set_settings:"set_settings"}
+};
+var common_client_settings_SettingsModel = function() {
+};
+$hxClasses["common.client.settings.SettingsModel"] = common_client_settings_SettingsModel;
+common_client_settings_SettingsModel.__name__ = ["common","client","settings","SettingsModel"];
+common_client_settings_SettingsModel.prototype = {
+	injectionsReady: function() {
+		this.settingsService.loadSettings("runtime/test.json");
+	}
+	,__class__: common_client_settings_SettingsModel
+};
+var common_client_settings_SettingsService = function() { };
+$hxClasses["common.client.settings.SettingsService"] = common_client_settings_SettingsService;
+common_client_settings_SettingsService.__name__ = ["common","client","settings","SettingsService"];
+common_client_settings_SettingsService.prototype = {
+	injectionsReady: function() {
+	}
+	,loadSettings: function(url) {
+		this._loaderService.loadFromUrl(url,$bind(this,this._onSettingsLoadSuccess));
+	}
+	,_onSettingsLoadSuccess: function(result) {
+		console.log("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		console.log({ '_onSettingsLoadSuccess() result' : result});
+		this._settings = JSON.parse(result);
+		this._settingsVO.set_settings(this._settings);
+		console.log({ '_onSettingsLoadSuccess() _settings' : this._settings});
+		console.log("_onSettingsLoadSuccess() _settingsVO.settings: " + Std.string(this._settingsVO.settings));
+		console.log("_onSettingsLoadSuccess() _settingsVO.settings.version: " + this._settingsVO.settings.version);
+		console.log("_onSettingsLoadSuccess() _settingsVO.settings.data.settings.width: " + this._settingsVO.settings.data.settings.width);
+		console.log("_onSettingsLoadSuccess() _settingsVO.settings.data.settings.height: " + this._settingsVO.settings.data.settings.height);
+	}
+	,__class__: common_client_settings_SettingsService
+};
+var common_client_util_BuildInfo = $hx_exports.common.client.util.BuildInfo = function() {
+	this.currentDateTime = new Date();
+	this._init();
+};
+$hxClasses["common.client.util.BuildInfo"] = common_client_util_BuildInfo;
+common_client_util_BuildInfo.__name__ = ["common","client","util","BuildInfo"];
+common_client_util_BuildInfo.prototype = {
+	_init: function() {
+		common_client_util_BuildInfo.COMPILE_TARGET = "js";
+		common_client_util_BuildInfo.BUILD_TARGET = "debug";
+		console.log("COMPILE_TARGET: " + common_client_util_BuildInfo.COMPILE_TARGET);
+		console.log("BUILD_TARGET: " + common_client_util_BuildInfo.BUILD_TARGET);
+		console.log("COMPILE_DATE_TIME_STRING: " + common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING);
+		console.log("LAST_RUN_DATE_TIME_STRING: " + common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING);
+	}
+	,__class__: common_client_util_BuildInfo
+};
+var common_client_util_LoaderService = function() {
+};
+$hxClasses["common.client.util.LoaderService"] = common_client_util_LoaderService;
+common_client_util_LoaderService.__name__ = ["common","client","util","LoaderService"];
+common_client_util_LoaderService.prototype = {
+	loadFromUrl: function(url,onDataCallback,onErrorCallback) {
+		var tempHttp = new haxe_Http(url);
+		if(onDataCallback != null) tempHttp.onData = onDataCallback; else tempHttp.onData = $bind(this,this._onHttpData);
+		if(onErrorCallback != null) tempHttp.onError = onErrorCallback; else tempHttp.onError = $bind(this,this._onHttpError);
+		tempHttp.request(false);
+	}
+	,_onHttpData: function(result) {
+		console.log("_onHttpData() result: " + result);
+	}
+	,_onHttpError: function(result) {
+		console.log("_onHttpError() result: " + result);
+	}
+	,__class__: common_client_util_LoaderService
 };
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = ["haxe","IMap"];
+var haxe_Http = function(url) {
+	this.url = url;
+	this.headers = new List();
+	this.params = new List();
+	this.async = true;
+};
+$hxClasses["haxe.Http"] = haxe_Http;
+haxe_Http.__name__ = ["haxe","Http"];
+haxe_Http.prototype = {
+	request: function(post) {
+		var me = this;
+		me.responseData = null;
+		var r = this.req = js_Browser.createXMLHttpRequest();
+		var onreadystatechange = function(_) {
+			if(r.readyState != 4) return;
+			var s;
+			try {
+				s = r.status;
+			} catch( e ) {
+				if (e instanceof js__$Boot_HaxeError) e = e.val;
+				s = null;
+			}
+			if(s != null) {
+				var protocol = window.location.protocol.toLowerCase();
+				var rlocalProtocol = new EReg("^(?:about|app|app-storage|.+-extension|file|res|widget):$","");
+				var isLocal = rlocalProtocol.match(protocol);
+				if(isLocal) if(r.responseText != null) s = 200; else s = 404;
+			}
+			if(s == undefined) s = null;
+			if(s != null) me.onStatus(s);
+			if(s != null && s >= 200 && s < 400) {
+				me.req = null;
+				me.onData(me.responseData = r.responseText);
+			} else if(s == null) {
+				me.req = null;
+				me.onError("Failed to connect or resolve host");
+			} else switch(s) {
+			case 12029:
+				me.req = null;
+				me.onError("Failed to connect to host");
+				break;
+			case 12007:
+				me.req = null;
+				me.onError("Unknown host");
+				break;
+			default:
+				me.req = null;
+				me.responseData = r.responseText;
+				me.onError("Http Error #" + r.status);
+			}
+		};
+		if(this.async) r.onreadystatechange = onreadystatechange;
+		var uri = this.postData;
+		if(uri != null) post = true; else {
+			var _g_head = this.params.h;
+			var _g_val = null;
+			while(_g_head != null) {
+				var p;
+				p = (function($this) {
+					var $r;
+					_g_val = _g_head[0];
+					_g_head = _g_head[1];
+					$r = _g_val;
+					return $r;
+				}(this));
+				if(uri == null) uri = ""; else uri += "&";
+				uri += encodeURIComponent(p.param) + "=" + encodeURIComponent(p.value);
+			}
+		}
+		try {
+			if(post) r.open("POST",this.url,this.async); else if(uri != null) {
+				var question = this.url.split("?").length <= 1;
+				r.open("GET",this.url + (question?"?":"&") + uri,this.async);
+				uri = null;
+			} else r.open("GET",this.url,this.async);
+		} catch( e1 ) {
+			if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
+			me.req = null;
+			this.onError(e1.toString());
+			return;
+		}
+		if(!Lambda.exists(this.headers,function(h) {
+			return h.header == "Content-Type";
+		}) && post && this.postData == null) r.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+		var _g_head1 = this.headers.h;
+		var _g_val1 = null;
+		while(_g_head1 != null) {
+			var h1;
+			h1 = (function($this) {
+				var $r;
+				_g_val1 = _g_head1[0];
+				_g_head1 = _g_head1[1];
+				$r = _g_val1;
+				return $r;
+			}(this));
+			r.setRequestHeader(h1.header,h1.value);
+		}
+		r.send(uri);
+		if(!this.async) onreadystatechange(null);
+	}
+	,onData: function(data) {
+	}
+	,onError: function(msg) {
+	}
+	,onStatus: function(status) {
+	}
+	,__class__: haxe_Http
+};
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
@@ -442,6 +680,14 @@ js_Boot.__nativeClassName = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
+var js_Browser = function() { };
+$hxClasses["js.Browser"] = js_Browser;
+js_Browser.__name__ = ["js","Browser"];
+js_Browser.createXMLHttpRequest = function() {
+	if(typeof XMLHttpRequest != "undefined") return new XMLHttpRequest();
+	if(typeof ActiveXObject != "undefined") return new ActiveXObject("Microsoft.XMLHTTP");
+	throw new js__$Boot_HaxeError("Unable to create XMLHttpRequest object.");
+};
 var js_client_App = function() {
 	this._jsLogElement = $("#jsLog");
 	this._swfContainerElement = $("#swfContainer");
@@ -465,7 +711,7 @@ js_client_App.prototype = {
 		console.log({ '_compileDateTimeElement' : this._compileDateTimeElement});
 		console.log({ '_currentDateTimeElement' : this._currentDateTimeElement});
 		console.log({ '_swfContainerElement' : this._swfContainerElement});
-		this._compileDateTimeElement.text("[last compile date-time " + DateTools.format(common_client_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
+		this._compileDateTimeElement.text("[last compile date-time " + DateTools.format(common_client_util_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
 		window.console.log("this will only appear in the debug version of the js output");
 	}
 	,__class__: js_client_App
@@ -530,7 +776,13 @@ var minject_Injector = function() {
 $hxClasses["minject.Injector"] = minject_Injector;
 minject_Injector.__name__ = ["minject","Injector"];
 minject_Injector.prototype = {
-	mapSingleton: function(whenAskedFor,named) {
+	mapClass: function(whenAskedFor,instantiateClass,named) {
+		if(named == null) named = "";
+		var config = this.getMapping(whenAskedFor,named);
+		config.setResult(new minject_result_InjectClassResult(instantiateClass));
+		return config;
+	}
+	,mapSingleton: function(whenAskedFor,named) {
 		if(named == null) named = "";
 		return this.mapSingletonOf(whenAskedFor,whenAskedFor,named);
 	}
@@ -808,6 +1060,22 @@ minject_result_InjectionResult.prototype = {
 	}
 	,__class__: minject_result_InjectionResult
 };
+var minject_result_InjectClassResult = function(responseType) {
+	minject_result_InjectionResult.call(this);
+	this.responseType = responseType;
+};
+$hxClasses["minject.result.InjectClassResult"] = minject_result_InjectClassResult;
+minject_result_InjectClassResult.__name__ = ["minject","result","InjectClassResult"];
+minject_result_InjectClassResult.__super__ = minject_result_InjectionResult;
+minject_result_InjectClassResult.prototype = $extend(minject_result_InjectionResult.prototype,{
+	getResponse: function(injector) {
+		return injector.instantiate(this.responseType);
+	}
+	,toString: function() {
+		return "class " + Type.getClassName(this.responseType);
+	}
+	,__class__: minject_result_InjectClassResult
+});
 var minject_result_InjectSingletonResult = function(responseType) {
 	minject_result_InjectionResult.call(this);
 	this.responseType = responseType;
@@ -831,6 +1099,26 @@ minject_result_InjectSingletonResult.prototype = $extend(minject_result_Injectio
 	}
 	,__class__: minject_result_InjectSingletonResult
 });
+var tink_core_TypedError = function() { };
+$hxClasses["tink.core.TypedError"] = tink_core_TypedError;
+tink_core_TypedError.__name__ = ["tink","core","TypedError"];
+tink_core_TypedError.prototype = {
+	printPos: function() {
+		return this.pos.className + "." + this.pos.methodName + ":" + this.pos.lineNumber;
+	}
+	,toString: function() {
+		var ret = "Error#" + this.code + ": " + this.message;
+		if(this.pos != null) ret += " " + this.printPos();
+		return ret;
+	}
+	,throwSelf: function() {
+		throw new js__$Boot_HaxeError(this);
+		return this;
+	}
+	,__class__: tink_core_TypedError
+};
+var $_, $fid = 0;
+function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 $hxClasses.Math = Math;
 String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
@@ -839,25 +1127,27 @@ Array.__name__ = ["Array"];
 Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
 var __map_reserved = {}
-common_client_BuildInfo.COMPILE_TARGET = "unkown hinson";
-common_client_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,22,15,56,3);
-common_client_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
+common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsService.__meta__ = { fields : { _loaderService : { type : ["common.client.util.LoaderService"], inject : null}, _settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
+common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,23,16,40,12);
+common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,22,15,56,3);
+	var _this = new Date(2016,2,23,16,40,12);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
-common_client_BuildInfo.LAST_RUN_DATE_TIME_STRING = (function($this) {
+common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING = (function($this) {
 	var $r;
 	var _this = new Date();
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
-common_client_Test.__meta__ = { fields : { buildInfo : { type : ["common.client.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
 haxe_IMap.__meta__ = { obj : { 'interface' : null}};
 js_Boot.__toStr = {}.toString;
-js_client_App.__meta__ = { fields : { buildInfo : { type : ["common.client.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
+js_client_App.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
 minject_point_InjectionPoint.__meta__ = { obj : { 'interface' : null}};
 common_client_Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

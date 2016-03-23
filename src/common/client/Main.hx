@@ -1,7 +1,12 @@
 package common.client;
 
+import common.client.util.BuildInfo;
+import common.client.util.LoaderService;
+import common.client.settings.*;
+import common.client.settings.Settings.SettingsVO;
+import minject.Injector;
+
 #if flash
-import common.client.BuildInfo;
 import flash.Lib;
 import flash.client.App;
 import flash.display.Sprite;
@@ -11,9 +16,6 @@ import js.client.App;
 import js.Browser;
 #end
 
-import minject.Injector;
-import haxe.Timer;
-
 #if js
 @:expose
 #end
@@ -21,6 +23,7 @@ import haxe.Timer;
 class Main #if flash extends Sprite #end
 {
   private var _mainInjector = new Injector();
+  private var _settingsVO:SettingsVO;
 
   #if flash
   private var _app:App;
@@ -102,8 +105,14 @@ class Main #if flash extends Sprite #end
   {
     trace('_initInjector()');
 
+    //_mainInjector.mapSingleton(Injector, 'main');//fix here thought about passing an instance of the _mainInjector around
     _mainInjector.mapSingleton(BuildInfo);
-    _mainInjector.mapSingleton(Test);
+    _mainInjector.mapSingleton(CommonModel);
+    _mainInjector.mapSingleton(SettingsModel);
+    _mainInjector.mapSingleton(SettingsVO);
+    _mainInjector.mapSingleton(SettingsService);
+
+    _mainInjector.mapClass(LoaderService, LoaderService);
 
     #if flash
     //_app = new App();
@@ -119,9 +128,13 @@ class Main #if flash extends Sprite #end
     _initUI();
     #end
 
-    //this Test class is intended to test both flash and js at the same time
+    //this CommonModel class is intended to be used by both flash and js at the same time
     //and can be instantiated outside the conditional compiler that are client side specific
-    _mainInjector.instantiate(Test);
+    _mainInjector.instantiate(CommonModel);
+    _mainInjector.instantiate(SettingsModel);
+    _mainInjector.instantiate(SettingsVO);
+    _mainInjector.instantiate(SettingsService);
+    _mainInjector.instantiate(LoaderService);
   }
 
   private function _initUI():Void
