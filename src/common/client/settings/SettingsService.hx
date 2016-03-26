@@ -1,13 +1,15 @@
 package common.client.settings;
 
+import common.client.signal.SettingsReadySignal;
 import common.client.settings.Settings;
 import common.client.util.LoaderService;
 import haxe.Json;
 
 class SettingsService
 {
-  @inject public var _loaderService:LoaderService;
-  @inject public var _settingsVO:SettingsVO;
+  @inject public var loaderService:LoaderService;
+  @inject public var settingsVO:SettingsVO;
+  @inject public var settingsReadySignal:SettingsReadySignal;
 
   private var _settings:Settings;
 
@@ -22,23 +24,23 @@ class SettingsService
 
   public function loadSettings(url:String):Void
   {
-    _loaderService.loadFromUrl(url, _onSettingsLoadSuccess);
+    loaderService.loadFromUrl(url, _onSettingsLoadSuccess);
+
+    //return loaderService.loadFromUrl(url, function(result:String):Settings
+    //{
+    //  return _onSettingsLoadSuccess(result);
+    //});
   }
 
   private function _onSettingsLoadSuccess(result:String):Void
   {
-    trace('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------');
-    trace({'_onSettingsLoadSuccess() result':result});
+    //trace({'_onSettingsLoadSuccess() result':result});
 
     _settings = Json.parse(result);
-    _settingsVO.settings = _settings;
-    //_settingsVO = _settings;
+    settingsVO.settings = _settings;
 
-    trace({'_onSettingsLoadSuccess() _settings':_settings});
+    //trace({'_onSettingsLoadSuccess() _settings':_settings});
 
-    trace('_onSettingsLoadSuccess() _settingsVO.settings: ${_settingsVO.settings}');
-    trace('_onSettingsLoadSuccess() _settingsVO.settings.version: ${_settingsVO.settings.version}');
-    trace('_onSettingsLoadSuccess() _settingsVO.settings.data.settings.width: ${_settingsVO.settings.data.settings.width}');
-    trace('_onSettingsLoadSuccess() _settingsVO.settings.data.settings.height: ${_settingsVO.settings.data.settings.height}');
+    settingsReadySignal.dispatch(settingsVO);
   }
 }

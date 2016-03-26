@@ -1,6 +1,6 @@
 package common.client;
 
-import common.client.settings.SettingsModel;
+import common.client.settings.Settings.SettingsVO;
 import common.client.util.BuildInfo;
 
 #if flash
@@ -15,7 +15,7 @@ import js.Error;
 class CommonModel
 {
   @inject public var buildInfo:BuildInfo;
-  @inject public var settingsModel:SettingsModel;
+  @inject public var settingsVO:SettingsVO;
 
   public function new()
   {
@@ -38,7 +38,12 @@ class CommonModel
     //#end
 
     //trace('buildInfo: $buildInfo');
-    trace('settingsModel: $settingsModel');
+    trace({'settingsVO':settingsVO});
+
+    if(settingsVO.settings != null)
+    {
+      trace('settingsVO.settings.version: ${settingsVO.settings.version}');
+    }
 
     //settingsVO.settings = ;
 

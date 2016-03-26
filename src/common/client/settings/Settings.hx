@@ -1,7 +1,7 @@
 package common.client.settings;
 
-@:keep
-@:struct
+//@:keep
+//@:structInit
 typedef Settings =
 {
   var version:String;
@@ -15,7 +15,7 @@ typedef Settings =
   //};
 }
 
-@:keep
+//@:keep
 typedef SettingsDataProp =
 {
   var id:String;
@@ -25,7 +25,7 @@ typedef SettingsDataProp =
   var settings:SettingsDataSettingsProp;
 }
 
-@:keep
+//@:keep
 typedef SettingsDataSettingsProp =
 {
   var autoplay:Bool;

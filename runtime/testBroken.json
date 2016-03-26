@@ -1,3 +1,21 @@
 {
-  "version": false
+  "version": false,
+
+  "error": 0,
+  "completed_in": "0.092",
+  "msg": "Success",
+
+  "data": {
+    "id": "3517",
+    "title": "Wayfare_NewTest",
+    "status": "ENABLED",
+
+    "settings": {
+      "autoplay": true,
+      "fixed_size": false,
+      "maintain_16_x_9": true,
+      "width": 830,
+      "height": 460
+    }
+  }
 }

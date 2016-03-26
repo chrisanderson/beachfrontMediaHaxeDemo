@@ -1,5 +1,6 @@
 package common.client;
 
+import common.client.signal.SettingsReadySignal;
 import common.client.util.BuildInfo;
 import common.client.util.LoaderService;
 import common.client.settings.*;
@@ -111,6 +112,7 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapSingleton(SettingsModel);
     _mainInjector.mapSingleton(SettingsVO);
     _mainInjector.mapSingleton(SettingsService);
+    _mainInjector.mapSingleton(SettingsReadySignal);
 
     _mainInjector.mapClass(LoaderService, LoaderService);
 
@@ -128,12 +130,13 @@ class Main #if flash extends Sprite #end
     _initUI();
     #end
 
-    //this CommonModel class is intended to be used by both flash and js at the same time
-    //and can be instantiated outside the conditional compiler that are client side specific
+    //this these classes are intended to be used by both flash and js at the same time
+    //and can be instantiated outside the conditional compiler logic that's client side specific
     _mainInjector.instantiate(CommonModel);
     _mainInjector.instantiate(SettingsModel);
     _mainInjector.instantiate(SettingsVO);
     _mainInjector.instantiate(SettingsService);
+    _mainInjector.instantiate(SettingsReadySignal);
     _mainInjector.instantiate(LoaderService);
   }
 
