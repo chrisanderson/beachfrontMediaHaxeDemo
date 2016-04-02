@@ -1,6 +1,7 @@
 package common.client;
 
-import common.client.signal.SettingsReadySignal;
+import common.client.signal.SettingsModelSignal;
+import common.client.signal.SettingsSignal;
 import common.client.util.BuildInfo;
 import common.client.util.LoaderService;
 import common.client.settings.*;
@@ -24,7 +25,6 @@ import js.Browser;
 class Main #if flash extends Sprite #end
 {
   private var _mainInjector = new Injector();
-  private var _settingsVO:SettingsVO;
 
   #if flash
   private var _app:App;
@@ -112,7 +112,8 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapSingleton(SettingsModel);
     _mainInjector.mapSingleton(SettingsVO);
     _mainInjector.mapSingleton(SettingsService);
-    _mainInjector.mapSingleton(SettingsReadySignal);
+    _mainInjector.mapSingleton(SettingsSignal);
+    _mainInjector.mapSingleton(SettingsModelSignal);
 
     _mainInjector.mapClass(LoaderService, LoaderService);
 
@@ -125,6 +126,8 @@ class Main #if flash extends Sprite #end
     _initUI();//fix here this should be called in _onAddedToStage
     #elseif js
     //_app = new App();
+    //_mainInjector.injectInto(_app);
+
     _app = _mainInjector.instantiate(App);
 
     _initUI();
@@ -133,11 +136,6 @@ class Main #if flash extends Sprite #end
     //this these classes are intended to be used by both flash and js at the same time
     //and can be instantiated outside the conditional compiler logic that's client side specific
     _mainInjector.instantiate(CommonModel);
-    _mainInjector.instantiate(SettingsModel);
-    _mainInjector.instantiate(SettingsVO);
-    _mainInjector.instantiate(SettingsService);
-    _mainInjector.instantiate(SettingsReadySignal);
-    _mainInjector.instantiate(LoaderService);
   }
 
   private function _initUI():Void

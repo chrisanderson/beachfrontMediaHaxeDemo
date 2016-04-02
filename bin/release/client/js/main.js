@@ -188,6 +188,14 @@ Reflect.fields = function(o) {
 	}
 	return a;
 };
+Reflect.isFunction = function(f) {
+	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
+};
+Reflect.compareMethods = function(f1,f2) {
+	if(f1 == f2) return true;
+	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
+	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
+};
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
@@ -264,44 +272,12 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var common_client_Main = $hx_exports.common.client.Main = function() {
-	this._mainInjector = new minject_Injector();
-	this._init();
-	this._initInjector();
-};
-$hxClasses["common.client.Main"] = common_client_Main;
-common_client_Main.__name__ = ["common","client","Main"];
-common_client_Main.main = function() {
-	var mainInstance = new common_client_Main();
-};
-common_client_Main.prototype = {
-	_init: function() {
-		var tempFlashVars = { };
-		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
-		var tempSwfContainer = window.document.querySelector("#swfContainer");
-		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "50%", "100%", 10, null, tempFlashVars, tempSwfParams);
-	}
-	,_initInjector: function() {
-		this._mainInjector.mapSingleton(common_client_util_BuildInfo);
-		this._mainInjector.mapSingleton(common_client_Test);
-		this._mainInjector.mapClass(common_client_settings_SettingsService,common_client_settings_SettingsService);
-		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
-		this._app = this._mainInjector.instantiate(js_client_App);
-		this._initUI();
-		this._mainInjector.instantiate(common_client_Test);
-		this._mainInjector.instantiate(common_client_settings_SettingsService);
-		this._mainInjector.instantiate(common_client_util_LoaderService);
-	}
-	,_initUI: function() {
-		null;
-	}
-	,__class__: common_client_Main
-};
-var common_client_Test = $hx_exports.common.client.Test = function() { };
-$hxClasses["common.client.Test"] = common_client_Test;
-common_client_Test.__name__ = ["common","client","Test"];
-common_client_Test.prototype = {
+var common_client_CommonModel = $hx_exports.common.client.CommonModel = function() { };
+$hxClasses["common.client.CommonModel"] = common_client_CommonModel;
+common_client_CommonModel.__name__ = ["common","client","CommonModel"];
+common_client_CommonModel.prototype = {
 	injectionsReady: function() {
+		if(this.settingsVO.settings != null) null;
 		var tempValue = 1;
 		tempValue++;
 		var tempJsLog = $("#jsLog");
@@ -325,17 +301,179 @@ common_client_Test.prototype = {
 			null;
 		}
 	}
-	,__class__: common_client_Test
+	,__class__: common_client_CommonModel
+};
+var common_client_Main = $hx_exports.common.client.Main = function() {
+	this._mainInjector = new minject_Injector();
+	this._init();
+	this._initInjector();
+};
+$hxClasses["common.client.Main"] = common_client_Main;
+common_client_Main.__name__ = ["common","client","Main"];
+common_client_Main.main = function() {
+	var mainInstance = new common_client_Main();
+};
+common_client_Main.prototype = {
+	_init: function() {
+		var tempFlashVars = { };
+		var tempSwfParams = { menu : "false", scale : "noScale", allowFullscreen : "true", allowScriptAccess : "always", bgcolor : "#eeeeee", wmode : "direct"};
+		var tempSwfContainer = window.document.querySelector("#swfContainer");
+		var tempSwfObject = swfobject.embedSWF("swf/main.swf", tempSwfContainer, "50%", "100%", 10, null, tempFlashVars, tempSwfParams);
+	}
+	,_initInjector: function() {
+		this._mainInjector.mapSingleton(common_client_util_BuildInfo);
+		this._mainInjector.mapSingleton(common_client_CommonModel);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsVO);
+		this._mainInjector.mapSingleton(common_client_settings_SettingsService);
+		this._mainInjector.mapSingleton(common_client_signal_SettingsReadySignal);
+		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
+		this._app = this._mainInjector.instantiate(js_client_App);
+		this._initUI();
+		this._mainInjector.instantiate(common_client_CommonModel);
+		this._mainInjector.instantiate(common_client_settings_SettingsModel);
+		this._mainInjector.instantiate(common_client_settings_SettingsVO);
+		this._mainInjector.instantiate(common_client_settings_SettingsService);
+		this._mainInjector.instantiate(common_client_signal_SettingsReadySignal);
+		this._mainInjector.instantiate(common_client_util_LoaderService);
+	}
+	,_initUI: function() {
+		null;
+	}
+	,__class__: common_client_Main
+};
+var common_client_settings_SettingsVO = function() { };
+$hxClasses["common.client.settings.SettingsVO"] = common_client_settings_SettingsVO;
+common_client_settings_SettingsVO.__name__ = ["common","client","settings","SettingsVO"];
+common_client_settings_SettingsVO.prototype = {
+	set_settings: function(value) {
+		if(this.settings == null) this.settings = value;
+		return this.settings;
+	}
+	,__class__: common_client_settings_SettingsVO
+	,__properties__: {set_settings:"set_settings"}
+};
+var common_client_settings_SettingsModel = function() {
+};
+$hxClasses["common.client.settings.SettingsModel"] = common_client_settings_SettingsModel;
+common_client_settings_SettingsModel.__name__ = ["common","client","settings","SettingsModel"];
+common_client_settings_SettingsModel.prototype = {
+	injectionsReady: function() {
+		this.settingsReadySignal.add($bind(this,this._onSettingsReady));
+		this.settingsService.loadSettings("runtime/test.json");
+	}
+	,_onSettingsReady: function(value) {
+		this.settingsVO = value;
+		null;
+	}
+	,__class__: common_client_settings_SettingsModel
 };
 var common_client_settings_SettingsService = function() { };
 $hxClasses["common.client.settings.SettingsService"] = common_client_settings_SettingsService;
 common_client_settings_SettingsService.__name__ = ["common","client","settings","SettingsService"];
 common_client_settings_SettingsService.prototype = {
 	injectionsReady: function() {
-		this._jsonConfigTypeDef = this._loaderService.loadFromUrl("runtime/test.json");
+	}
+	,loadSettings: function(url) {
+		this.loaderService.loadFromUrl(url,$bind(this,this._onSettingsLoadSuccess));
+	}
+	,_onSettingsLoadSuccess: function(result) {
+		this._settings = JSON.parse(result);
+		this.settingsVO.set_settings(this._settings);
+		this.settingsReadySignal.dispatch(this.settingsVO);
 	}
 	,__class__: common_client_settings_SettingsService
 };
+var msignal_Signal = function(valueClasses) {
+	if(valueClasses == null) valueClasses = [];
+	this.valueClasses = valueClasses;
+	this.slots = msignal_SlotList.NIL;
+	this.priorityBased = false;
+};
+$hxClasses["msignal.Signal"] = msignal_Signal;
+msignal_Signal.__name__ = ["msignal","Signal"];
+msignal_Signal.prototype = {
+	add: function(listener) {
+		return this.registerListener(listener);
+	}
+	,addOnce: function(listener) {
+		return this.registerListener(listener,true);
+	}
+	,addWithPriority: function(listener,priority) {
+		if(priority == null) priority = 0;
+		return this.registerListener(listener,false,priority);
+	}
+	,addOnceWithPriority: function(listener,priority) {
+		if(priority == null) priority = 0;
+		return this.registerListener(listener,true,priority);
+	}
+	,remove: function(listener) {
+		var slot = this.slots.find(listener);
+		if(slot == null) return null;
+		this.slots = this.slots.filterNot(listener);
+		return slot;
+	}
+	,removeAll: function() {
+		this.slots = msignal_SlotList.NIL;
+	}
+	,registerListener: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		if(this.registrationPossible(listener,once)) {
+			var newSlot = this.createSlot(listener,once,priority);
+			if(!this.priorityBased && priority != 0) this.priorityBased = true;
+			if(!this.priorityBased && priority == 0) this.slots = this.slots.prepend(newSlot); else this.slots = this.slots.insertWithPriority(newSlot);
+			return newSlot;
+		}
+		return this.slots.find(listener);
+	}
+	,registrationPossible: function(listener,once) {
+		if(!this.slots.nonEmpty) return true;
+		var existingSlot = this.slots.find(listener);
+		if(existingSlot == null) return true;
+		return false;
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return null;
+	}
+	,get_numListeners: function() {
+		return this.slots.get_length();
+	}
+	,__class__: msignal_Signal
+	,__properties__: {get_numListeners:"get_numListeners"}
+};
+var msignal_Signal1 = function(type) {
+	msignal_Signal.call(this,[type]);
+};
+$hxClasses["msignal.Signal1"] = msignal_Signal1;
+msignal_Signal1.__name__ = ["msignal","Signal1"];
+msignal_Signal1.__super__ = msignal_Signal;
+msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function(value) {
+		var slotsToProcess = this.slots;
+		while(slotsToProcess.nonEmpty) {
+			slotsToProcess.head.execute(value);
+			slotsToProcess = slotsToProcess.tail;
+		}
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return new msignal_Slot1(this,listener,once,priority);
+	}
+	,__class__: msignal_Signal1
+});
+var common_client_signal_SettingsReadySignal = function() {
+	msignal_Signal1.call(this);
+};
+$hxClasses["common.client.signal.SettingsReadySignal"] = common_client_signal_SettingsReadySignal;
+common_client_signal_SettingsReadySignal.__name__ = ["common","client","signal","SettingsReadySignal"];
+common_client_signal_SettingsReadySignal.__super__ = msignal_Signal1;
+common_client_signal_SettingsReadySignal.prototype = $extend(msignal_Signal1.prototype,{
+	__class__: common_client_signal_SettingsReadySignal
+});
 var common_client_util_BuildInfo = $hx_exports.common.client.util.BuildInfo = function() {
 	this.currentDateTime = new Date();
 	this._init();
@@ -355,12 +493,16 @@ var common_client_util_LoaderService = function() {
 $hxClasses["common.client.util.LoaderService"] = common_client_util_LoaderService;
 common_client_util_LoaderService.__name__ = ["common","client","util","LoaderService"];
 common_client_util_LoaderService.prototype = {
-	loadFromUrl: function(url) {
-		var tempHandler = new haxe_Http(url);
-		tempHandler.onData = $bind(this,this._onHttpData);
-		tempHandler.request(false);
+	loadFromUrl: function(url,onDataCallback,onErrorCallback) {
+		var tempHttp = new haxe_Http(url);
+		if(onDataCallback != null) tempHttp.onData = onDataCallback; else tempHttp.onData = $bind(this,this._onHttpData);
+		if(onErrorCallback != null) tempHttp.onError = onErrorCallback; else tempHttp.onError = $bind(this,this._onHttpError);
+		tempHttp.request(false);
 	}
 	,_onHttpData: function(result) {
+		null;
+	}
+	,_onHttpError: function(result) {
 		null;
 	}
 	,__class__: common_client_util_LoaderService
@@ -1007,6 +1149,192 @@ minject_result_InjectSingletonResult.prototype = $extend(minject_result_Injectio
 	}
 	,__class__: minject_result_InjectSingletonResult
 });
+var msignal_Signal0 = function() {
+	msignal_Signal.call(this);
+};
+$hxClasses["msignal.Signal0"] = msignal_Signal0;
+msignal_Signal0.__name__ = ["msignal","Signal0"];
+msignal_Signal0.__super__ = msignal_Signal;
+msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function() {
+		var slotsToProcess = this.slots;
+		while(slotsToProcess.nonEmpty) {
+			slotsToProcess.head.execute();
+			slotsToProcess = slotsToProcess.tail;
+		}
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return new msignal_Slot0(this,listener,once,priority);
+	}
+	,__class__: msignal_Signal0
+});
+var msignal_Signal2 = function(type1,type2) {
+	msignal_Signal.call(this,[type1,type2]);
+};
+$hxClasses["msignal.Signal2"] = msignal_Signal2;
+msignal_Signal2.__name__ = ["msignal","Signal2"];
+msignal_Signal2.__super__ = msignal_Signal;
+msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function(value1,value2) {
+		var slotsToProcess = this.slots;
+		while(slotsToProcess.nonEmpty) {
+			slotsToProcess.head.execute(value1,value2);
+			slotsToProcess = slotsToProcess.tail;
+		}
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return new msignal_Slot2(this,listener,once,priority);
+	}
+	,__class__: msignal_Signal2
+});
+var msignal_Slot = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	this.signal = signal;
+	this.set_listener(listener);
+	this.once = once;
+	this.priority = priority;
+	this.enabled = true;
+};
+$hxClasses["msignal.Slot"] = msignal_Slot;
+msignal_Slot.__name__ = ["msignal","Slot"];
+msignal_Slot.prototype = {
+	remove: function() {
+		this.signal.remove(this.listener);
+	}
+	,set_listener: function(value) {
+		return this.listener = value;
+	}
+	,__class__: msignal_Slot
+	,__properties__: {set_listener:"set_listener"}
+};
+var msignal_Slot0 = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	msignal_Slot.call(this,signal,listener,once,priority);
+};
+$hxClasses["msignal.Slot0"] = msignal_Slot0;
+msignal_Slot0.__name__ = ["msignal","Slot0"];
+msignal_Slot0.__super__ = msignal_Slot;
+msignal_Slot0.prototype = $extend(msignal_Slot.prototype,{
+	execute: function() {
+		if(!this.enabled) return;
+		if(this.once) this.remove();
+		this.listener();
+	}
+	,__class__: msignal_Slot0
+});
+var msignal_Slot1 = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	msignal_Slot.call(this,signal,listener,once,priority);
+};
+$hxClasses["msignal.Slot1"] = msignal_Slot1;
+msignal_Slot1.__name__ = ["msignal","Slot1"];
+msignal_Slot1.__super__ = msignal_Slot;
+msignal_Slot1.prototype = $extend(msignal_Slot.prototype,{
+	execute: function(value1) {
+		if(!this.enabled) return;
+		if(this.once) this.remove();
+		if(this.param != null) value1 = this.param;
+		this.listener(value1);
+	}
+	,__class__: msignal_Slot1
+});
+var msignal_Slot2 = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	msignal_Slot.call(this,signal,listener,once,priority);
+};
+$hxClasses["msignal.Slot2"] = msignal_Slot2;
+msignal_Slot2.__name__ = ["msignal","Slot2"];
+msignal_Slot2.__super__ = msignal_Slot;
+msignal_Slot2.prototype = $extend(msignal_Slot.prototype,{
+	execute: function(value1,value2) {
+		if(!this.enabled) return;
+		if(this.once) this.remove();
+		if(this.param1 != null) value1 = this.param1;
+		if(this.param2 != null) value2 = this.param2;
+		this.listener(value1,value2);
+	}
+	,__class__: msignal_Slot2
+});
+var msignal_SlotList = function(head,tail) {
+	this.nonEmpty = false;
+	if(head == null && tail == null) this.nonEmpty = false; else if(head == null) {
+	} else {
+		this.head = head;
+		if(tail == null) this.tail = msignal_SlotList.NIL; else this.tail = tail;
+		this.nonEmpty = true;
+	}
+};
+$hxClasses["msignal.SlotList"] = msignal_SlotList;
+msignal_SlotList.__name__ = ["msignal","SlotList"];
+msignal_SlotList.prototype = {
+	get_length: function() {
+		if(!this.nonEmpty) return 0;
+		if(this.tail == msignal_SlotList.NIL) return 1;
+		var result = 0;
+		var p = this;
+		while(p.nonEmpty) {
+			++result;
+			p = p.tail;
+		}
+		return result;
+	}
+	,prepend: function(slot) {
+		return new msignal_SlotList(slot,this);
+	}
+	,insertWithPriority: function(slot) {
+		if(!this.nonEmpty) return new msignal_SlotList(slot);
+		var priority = slot.priority;
+		if(priority >= this.head.priority) return this.prepend(slot);
+		var wholeClone = new msignal_SlotList(this.head);
+		var subClone = wholeClone;
+		var current = this.tail;
+		while(current.nonEmpty) {
+			if(priority > current.head.priority) {
+				subClone.tail = current.prepend(slot);
+				return wholeClone;
+			}
+			subClone = subClone.tail = new msignal_SlotList(current.head);
+			current = current.tail;
+		}
+		subClone.tail = new msignal_SlotList(slot);
+		return wholeClone;
+	}
+	,filterNot: function(listener) {
+		if(!this.nonEmpty || listener == null) return this;
+		if(Reflect.compareMethods(this.head.listener,listener)) return this.tail;
+		var wholeClone = new msignal_SlotList(this.head);
+		var subClone = wholeClone;
+		var current = this.tail;
+		while(current.nonEmpty) {
+			if(Reflect.compareMethods(current.head.listener,listener)) {
+				subClone.tail = current.tail;
+				return wholeClone;
+			}
+			subClone = subClone.tail = new msignal_SlotList(current.head);
+			current = current.tail;
+		}
+		return this;
+	}
+	,find: function(listener) {
+		if(!this.nonEmpty) return null;
+		var p = this;
+		while(p.nonEmpty) {
+			if(Reflect.compareMethods(p.head.listener,listener)) return p.head;
+			p = p.tail;
+		}
+		return null;
+	}
+	,__class__: msignal_SlotList
+	,__properties__: {get_length:"get_length"}
+};
 var tink_core_TypedError = function() { };
 $hxClasses["tink.core.TypedError"] = tink_core_TypedError;
 tink_core_TypedError.__name__ = ["tink","core","TypedError"];
@@ -1035,14 +1363,16 @@ Array.__name__ = ["Array"];
 Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
 var __map_reserved = {}
-common_client_Test.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
-common_client_settings_SettingsService.__meta__ = { fields : { _loaderService : { type : ["common.client.util.LoaderService"], inject : null}, injectionsReady : { args : null, post : null}}};
+msignal_SlotList.NIL = new msignal_SlotList(null,null);
+common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsReadySignal : { type : ["common.client.signal.SettingsReadySignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, settingsReadySignal : { type : ["common.client.signal.SettingsReadySignal"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,23,11,8,12);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,26,22,5,55);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,23,11,8,12);
+	var _this = new Date(2016,2,26,22,5,55);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

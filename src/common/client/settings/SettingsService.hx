@@ -1,6 +1,6 @@
 package common.client.settings;
 
-import common.client.signal.SettingsReadySignal;
+import common.client.signal.SettingsSignal;
 import common.client.settings.Settings;
 import common.client.util.LoaderService;
 import haxe.Json;
@@ -9,7 +9,7 @@ class SettingsService
 {
   @inject public var loaderService:LoaderService;
   @inject public var settingsVO:SettingsVO;
-  @inject public var settingsReadySignal:SettingsReadySignal;
+  @inject public var settingsSignal:SettingsSignal;
 
   private var _settings:Settings;
 
@@ -41,6 +41,6 @@ class SettingsService
 
     //trace({'_onSettingsLoadSuccess() _settings':_settings});
 
-    settingsReadySignal.dispatch(settingsVO);
+    settingsSignal.dispatch(SettingsSignal.LOAD_SUCCESS, settingsVO);
   }
 }

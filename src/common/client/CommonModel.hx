@@ -1,6 +1,8 @@
 package common.client;
 
 import common.client.settings.Settings.SettingsVO;
+import common.client.settings.SettingsModel;
+import common.client.signal.SettingsModelSignal;
 import common.client.util.BuildInfo;
 
 #if flash
@@ -15,7 +17,7 @@ import js.Error;
 class CommonModel
 {
   @inject public var buildInfo:BuildInfo;
-  @inject public var settingsVO:SettingsVO;
+  @inject public var settingsModel(default, null):SettingsModel;
 
   public function new()
   {
@@ -38,16 +40,8 @@ class CommonModel
     //#end
 
     //trace('buildInfo: $buildInfo');
-    trace({'settingsVO':settingsVO});
 
-    if(settingsVO.settings != null)
-    {
-      trace('settingsVO.settings.version: ${settingsVO.settings.version}');
-    }
-
-    //settingsVO.settings = ;
-
-    //trace('settingsVO.settings: ${settingsVO.settings}');
+    settingsModel.settingsModelSignal.add(_onSettingsModelSignal);
 
     var tempValue = 1;
 
@@ -113,5 +107,18 @@ class CommonModel
   private function _init():Void
   {
     trace('_init()');
+  }
+
+  private function _onSettingsModelSignal(eventType:String, value:SettingsModel):Void
+  {
+    if(eventType != SettingsModelSignal.MODEL_UPDATED){return;}
+
+    //settingsModel = value;
+
+    //settingsModel.settingsVO is setup for read access only
+    //and won't compile we try to use write access
+    //settingsModel.settingsVO = null;
+
+    trace('settingsModel.settingsVO.settings.version: ${settingsModel.settingsVO.settings.version}');
   }
 }
