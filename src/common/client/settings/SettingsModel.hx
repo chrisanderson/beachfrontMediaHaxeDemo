@@ -3,7 +3,6 @@ package common.client.settings;
 import String;
 import common.client.signal.SettingsSignal;
 import common.client.signal.SettingsModelSignal;
-import common.client.settings.Settings.SettingsVO;
 
 @:keep
 class SettingsModel
@@ -12,7 +11,7 @@ class SettingsModel
   @inject public var settingsSignal(default, null):SettingsSignal;
   @inject public var settingsModelSignal(default, null):SettingsModelSignal;
 
-  public var settingsVO(default, null):SettingsVO;
+  public var settings(default, null):Settings;
 
   public function new()
   {
@@ -30,21 +29,27 @@ class SettingsModel
 
     settingsSignal.add(_onSettingsSignal);
 
-    settingsService.loadSettings('runtime/test.json');
+    //settingsService.loadSettings('runtime/test.json');
     //settingsService.loadSettings('runtime/testBroken.json');
     //settingsService.loadSettings('nonExisting.json');
   }
 
-  private function _onSettingsSignal(eventType:String, value:SettingsVO):Void
+  private function _onSettingsSignal(eventType:String, value:Settings):Void
   {
     if(eventType != SettingsSignal.LOAD_SUCCESS){return;}
 
-    settingsVO = value;
+    settings = value;
 
-    trace({'_onSettingsReady settingsVO.settings':settingsVO.settings});
-    trace({'_onSettingsReady settingsVO.settings.version':settingsVO.settings.version});
-    trace({'_onSettingsReady settingsVO.settings.data.settings.width':settingsVO.settings.data.settings.width});
-    trace({'_onSettingsReady settingsVO.settings.data.settings.height':settingsVO.settings.data.settings.height});
+    //this will not compile because the Settings.version is typed as a String
+    //means we can define restrictive types for any dynamic data to help reduce errors
+    //settings.version = false;
+    //same here settings.data.id is typed as a String
+    //settings.data.id = false;
+
+    trace({'_onSettingsReady settings':settings});
+    trace({'_onSettingsReady settings.version':settings.version});
+    trace({'_onSettingsReady settings.data.settings.width':settings.data.settings.width});
+    trace({'_onSettingsReady settings.data.settings.height':settings.data.settings.height});
 
     settingsModelSignal.dispatch(SettingsModelSignal.MODEL_UPDATED, this);
   }

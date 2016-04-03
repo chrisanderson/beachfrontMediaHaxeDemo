@@ -309,7 +309,7 @@ common_client_CommonModel.prototype = {
 	}
 	,_onSettingsModelSignal: function(eventType,value) {
 		if(eventType != "MODEL_UPDATED") return;
-		console.log("settingsModel.settingsVO.settings.version: " + this.settingsModel.settingsVO.settings.version);
+		console.log("settingsModel.settings.version: " + this.settingsModel.settings.version);
 	}
 	,__class__: common_client_CommonModel
 };
@@ -341,7 +341,6 @@ common_client_Main.prototype = {
 		this._mainInjector.mapSingleton(common_client_util_BuildInfo);
 		this._mainInjector.mapSingleton(common_client_CommonModel);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
-		this._mainInjector.mapSingleton(common_client_settings_SettingsVO);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsService);
 		this._mainInjector.mapSingleton(common_client_signal_SettingsSignal);
 		this._mainInjector.mapSingleton(common_client_signal_SettingsModelSignal);
@@ -355,17 +354,6 @@ common_client_Main.prototype = {
 	}
 	,__class__: common_client_Main
 };
-var common_client_settings_SettingsVO = function() { };
-$hxClasses["common.client.settings.SettingsVO"] = common_client_settings_SettingsVO;
-common_client_settings_SettingsVO.__name__ = ["common","client","settings","SettingsVO"];
-common_client_settings_SettingsVO.prototype = {
-	set_settings: function(value) {
-		if(this.settings == null) this.settings = value;
-		return this.settings;
-	}
-	,__class__: common_client_settings_SettingsVO
-	,__properties__: {set_settings:"set_settings"}
-};
 var common_client_settings_SettingsModel = function() {
 };
 $hxClasses["common.client.settings.SettingsModel"] = common_client_settings_SettingsModel;
@@ -377,15 +365,14 @@ common_client_settings_SettingsModel.prototype = {
 	,_init: function() {
 		console.log("_init()");
 		this.settingsSignal.add($bind(this,this._onSettingsSignal));
-		this.settingsService.loadSettings("runtime/test.json");
 	}
 	,_onSettingsSignal: function(eventType,value) {
 		if(eventType != "LOAD_SUCCESS") return;
-		this.settingsVO = value;
-		console.log({ '_onSettingsReady settingsVO.settings' : this.settingsVO.settings});
-		console.log({ '_onSettingsReady settingsVO.settings.version' : this.settingsVO.settings.version});
-		console.log({ '_onSettingsReady settingsVO.settings.data.settings.width' : this.settingsVO.settings.data.settings.width});
-		console.log({ '_onSettingsReady settingsVO.settings.data.settings.height' : this.settingsVO.settings.data.settings.height});
+		this.settings = value;
+		console.log({ '_onSettingsReady settings' : this.settings});
+		console.log({ '_onSettingsReady settings.version' : this.settings.version});
+		console.log({ '_onSettingsReady settings.data.settings.width' : this.settings.data.settings.width});
+		console.log({ '_onSettingsReady settings.data.settings.height' : this.settings.data.settings.height});
 		this.settingsModelSignal.dispatch("MODEL_UPDATED",this);
 	}
 	,__class__: common_client_settings_SettingsModel
@@ -395,14 +382,6 @@ $hxClasses["common.client.settings.SettingsService"] = common_client_settings_Se
 common_client_settings_SettingsService.__name__ = ["common","client","settings","SettingsService"];
 common_client_settings_SettingsService.prototype = {
 	injectionsReady: function() {
-	}
-	,loadSettings: function(url) {
-		this.loaderService.loadFromUrl(url,$bind(this,this._onSettingsLoadSuccess));
-	}
-	,_onSettingsLoadSuccess: function(result) {
-		this._settings = JSON.parse(result);
-		this.settingsVO.set_settings(this._settings);
-		this.settingsSignal.dispatch("LOAD_SUCCESS",this.settingsVO);
 	}
 	,__class__: common_client_settings_SettingsService
 };
@@ -1437,15 +1416,15 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, settingsModelSignal : { type : ["common.client.signal.SettingsModelSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
-common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,2,19,53,5);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,2,21,18,29);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,2,19,53,5);
+	var _this = new Date(2016,3,2,21,18,29);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

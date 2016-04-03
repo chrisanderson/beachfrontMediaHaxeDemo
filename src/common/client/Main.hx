@@ -5,7 +5,6 @@ import common.client.signal.SettingsSignal;
 import common.client.util.BuildInfo;
 import common.client.util.LoaderService;
 import common.client.settings.*;
-import common.client.settings.Settings.SettingsVO;
 import minject.Injector;
 
 #if flash
@@ -110,7 +109,6 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapSingleton(BuildInfo);
     _mainInjector.mapSingleton(CommonModel);
     _mainInjector.mapSingleton(SettingsModel);
-    _mainInjector.mapSingleton(SettingsVO);
     _mainInjector.mapSingleton(SettingsService);
     _mainInjector.mapSingleton(SettingsSignal);
     _mainInjector.mapSingleton(SettingsModelSignal);

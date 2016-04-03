@@ -34,19 +34,3 @@ typedef SettingsDataSettingsProp =
   var width:Int;
   var height:Int;
 }
-
-@:keep
-class SettingsVO
-{
-  public var settings(default, set):Settings;
-
-  private function set_settings(value:Settings):Settings
-  {
-    if(settings == null)
-    {
-      settings = value;
-    }
-
-    return settings;
-  }
-}

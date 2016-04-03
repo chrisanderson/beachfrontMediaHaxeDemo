@@ -1,6 +1,5 @@
 package common.client;
 
-import common.client.settings.Settings.SettingsVO;
 import common.client.settings.SettingsModel;
 import common.client.signal.SettingsModelSignal;
 import common.client.util.BuildInfo;
@@ -17,7 +16,7 @@ import js.Error;
 class CommonModel
 {
   @inject public var buildInfo:BuildInfo;
-  @inject public var settingsModel(default, null):SettingsModel;
+  @inject public var settingsModel(default, never):SettingsModel;
 
   public function new()
   {
@@ -113,12 +112,14 @@ class CommonModel
   {
     if(eventType != SettingsModelSignal.MODEL_UPDATED){return;}
 
+    //settingsModel(default, never) means that
+    //settingsModel is readable here but not writable
     //settingsModel = value;
 
     //settingsModel.settingsVO is setup for read access only
     //and won't compile we try to use write access
     //settingsModel.settingsVO = null;
 
-    trace('settingsModel.settingsVO.settings.version: ${settingsModel.settingsVO.settings.version}');
+    trace('settingsModel.settings.version: ${settingsModel.settings.version}');
   }
 }

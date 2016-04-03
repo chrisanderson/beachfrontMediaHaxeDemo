@@ -8,7 +8,6 @@ import haxe.Json;
 class SettingsService
 {
   @inject public var loaderService:LoaderService;
-  @inject public var settingsVO:SettingsVO;
   @inject public var settingsSignal:SettingsSignal;
 
   private var _settings:Settings;
@@ -37,10 +36,9 @@ class SettingsService
     //trace({'_onSettingsLoadSuccess() result':result});
 
     _settings = Json.parse(result);
-    settingsVO.settings = _settings;
 
     //trace({'_onSettingsLoadSuccess() _settings':_settings});
 
-    settingsSignal.dispatch(SettingsSignal.LOAD_SUCCESS, settingsVO);
+    settingsSignal.dispatch(SettingsSignal.LOAD_SUCCESS, _settings);
   }
 }

@@ -277,7 +277,7 @@ $hxClasses["common.client.CommonModel"] = common_client_CommonModel;
 common_client_CommonModel.__name__ = ["common","client","CommonModel"];
 common_client_CommonModel.prototype = {
 	injectionsReady: function() {
-		if(this.settingsVO.settings != null) null;
+		this.settingsModel.settingsModelSignal.add($bind(this,this._onSettingsModelSignal));
 		var tempValue = 1;
 		tempValue++;
 		var tempJsLog = $("#jsLog");
@@ -300,6 +300,10 @@ common_client_CommonModel.prototype = {
 			if (error1 instanceof js__$Boot_HaxeError) error1 = error1.val;
 			null;
 		}
+	}
+	,_onSettingsModelSignal: function(eventType,value) {
+		if(eventType != "MODEL_UPDATED") return;
+		null;
 	}
 	,__class__: common_client_CommonModel
 };
@@ -326,16 +330,12 @@ common_client_Main.prototype = {
 		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsVO);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsService);
-		this._mainInjector.mapSingleton(common_client_signal_SettingsReadySignal);
+		this._mainInjector.mapSingleton(common_client_signal_SettingsSignal);
+		this._mainInjector.mapSingleton(common_client_signal_SettingsModelSignal);
 		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
 		this._app = this._mainInjector.instantiate(js_client_App);
 		this._initUI();
 		this._mainInjector.instantiate(common_client_CommonModel);
-		this._mainInjector.instantiate(common_client_settings_SettingsModel);
-		this._mainInjector.instantiate(common_client_settings_SettingsVO);
-		this._mainInjector.instantiate(common_client_settings_SettingsService);
-		this._mainInjector.instantiate(common_client_signal_SettingsReadySignal);
-		this._mainInjector.instantiate(common_client_util_LoaderService);
 	}
 	,_initUI: function() {
 		null;
@@ -359,12 +359,16 @@ $hxClasses["common.client.settings.SettingsModel"] = common_client_settings_Sett
 common_client_settings_SettingsModel.__name__ = ["common","client","settings","SettingsModel"];
 common_client_settings_SettingsModel.prototype = {
 	injectionsReady: function() {
-		this.settingsReadySignal.add($bind(this,this._onSettingsReady));
-		this.settingsService.loadSettings("runtime/test.json");
+		this._init();
 	}
-	,_onSettingsReady: function(value) {
+	,_init: function() {
+		this.settingsSignal.add($bind(this,this._onSettingsSignal));
+		this.settingsService.loadSettings("nonExisting.json");
+	}
+	,_onSettingsSignal: function(eventType,value) {
+		if(eventType != "LOAD_SUCCESS") return;
 		this.settingsVO = value;
-		null;
+		this.settingsModelSignal.dispatch("MODEL_UPDATED",this);
 	}
 	,__class__: common_client_settings_SettingsModel
 };
@@ -380,7 +384,7 @@ common_client_settings_SettingsService.prototype = {
 	,_onSettingsLoadSuccess: function(result) {
 		this._settings = JSON.parse(result);
 		this.settingsVO.set_settings(this._settings);
-		this.settingsReadySignal.dispatch(this.settingsVO);
+		this.settingsSignal.dispatch("LOAD_SUCCESS",this.settingsVO);
 	}
 	,__class__: common_client_settings_SettingsService
 };
@@ -444,35 +448,44 @@ msignal_Signal.prototype = {
 	,__class__: msignal_Signal
 	,__properties__: {get_numListeners:"get_numListeners"}
 };
-var msignal_Signal1 = function(type) {
-	msignal_Signal.call(this,[type]);
+var msignal_Signal2 = function(type1,type2) {
+	msignal_Signal.call(this,[type1,type2]);
 };
-$hxClasses["msignal.Signal1"] = msignal_Signal1;
-msignal_Signal1.__name__ = ["msignal","Signal1"];
-msignal_Signal1.__super__ = msignal_Signal;
-msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
-	dispatch: function(value) {
+$hxClasses["msignal.Signal2"] = msignal_Signal2;
+msignal_Signal2.__name__ = ["msignal","Signal2"];
+msignal_Signal2.__super__ = msignal_Signal;
+msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function(value1,value2) {
 		var slotsToProcess = this.slots;
 		while(slotsToProcess.nonEmpty) {
-			slotsToProcess.head.execute(value);
+			slotsToProcess.head.execute(value1,value2);
 			slotsToProcess = slotsToProcess.tail;
 		}
 	}
 	,createSlot: function(listener,once,priority) {
 		if(priority == null) priority = 0;
 		if(once == null) once = false;
-		return new msignal_Slot1(this,listener,once,priority);
+		return new msignal_Slot2(this,listener,once,priority);
 	}
-	,__class__: msignal_Signal1
+	,__class__: msignal_Signal2
 });
-var common_client_signal_SettingsReadySignal = function() {
-	msignal_Signal1.call(this);
+var common_client_signal_SettingsModelSignal = function() {
+	msignal_Signal2.call(this);
 };
-$hxClasses["common.client.signal.SettingsReadySignal"] = common_client_signal_SettingsReadySignal;
-common_client_signal_SettingsReadySignal.__name__ = ["common","client","signal","SettingsReadySignal"];
-common_client_signal_SettingsReadySignal.__super__ = msignal_Signal1;
-common_client_signal_SettingsReadySignal.prototype = $extend(msignal_Signal1.prototype,{
-	__class__: common_client_signal_SettingsReadySignal
+$hxClasses["common.client.signal.SettingsModelSignal"] = common_client_signal_SettingsModelSignal;
+common_client_signal_SettingsModelSignal.__name__ = ["common","client","signal","SettingsModelSignal"];
+common_client_signal_SettingsModelSignal.__super__ = msignal_Signal2;
+common_client_signal_SettingsModelSignal.prototype = $extend(msignal_Signal2.prototype,{
+	__class__: common_client_signal_SettingsModelSignal
+});
+var common_client_signal_SettingsSignal = function() {
+	msignal_Signal2.call(this);
+};
+$hxClasses["common.client.signal.SettingsSignal"] = common_client_signal_SettingsSignal;
+common_client_signal_SettingsSignal.__name__ = ["common","client","signal","SettingsSignal"];
+common_client_signal_SettingsSignal.__super__ = msignal_Signal2;
+common_client_signal_SettingsSignal.prototype = $extend(msignal_Signal2.prototype,{
+	__class__: common_client_signal_SettingsSignal
 });
 var common_client_util_BuildInfo = $hx_exports.common.client.util.BuildInfo = function() {
 	this.currentDateTime = new Date();
@@ -1170,26 +1183,26 @@ msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
 	}
 	,__class__: msignal_Signal0
 });
-var msignal_Signal2 = function(type1,type2) {
-	msignal_Signal.call(this,[type1,type2]);
+var msignal_Signal1 = function(type) {
+	msignal_Signal.call(this,[type]);
 };
-$hxClasses["msignal.Signal2"] = msignal_Signal2;
-msignal_Signal2.__name__ = ["msignal","Signal2"];
-msignal_Signal2.__super__ = msignal_Signal;
-msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
-	dispatch: function(value1,value2) {
+$hxClasses["msignal.Signal1"] = msignal_Signal1;
+msignal_Signal1.__name__ = ["msignal","Signal1"];
+msignal_Signal1.__super__ = msignal_Signal;
+msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function(value) {
 		var slotsToProcess = this.slots;
 		while(slotsToProcess.nonEmpty) {
-			slotsToProcess.head.execute(value1,value2);
+			slotsToProcess.head.execute(value);
 			slotsToProcess = slotsToProcess.tail;
 		}
 	}
 	,createSlot: function(listener,once,priority) {
 		if(priority == null) priority = 0;
 		if(once == null) once = false;
-		return new msignal_Slot2(this,listener,once,priority);
+		return new msignal_Slot1(this,listener,once,priority);
 	}
-	,__class__: msignal_Signal2
+	,__class__: msignal_Signal1
 });
 var msignal_Slot = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1364,15 +1377,17 @@ Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
-common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, injectionsReady : { args : null, post : null}}};
-common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsReadySignal : { type : ["common.client.signal.SettingsReadySignal"], inject : null}, injectionsReady : { args : null, post : null}}};
-common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, settingsReadySignal : { type : ["common.client.signal.SettingsReadySignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, settingsModelSignal : { type : ["common.client.signal.SettingsModelSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsVO : { type : ["common.client.settings.SettingsVO"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
+common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,2,26,22,5,55);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,2,20,12,29);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,2,26,22,5,55);
+	var _this = new Date(2016,3,2,20,12,29);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
