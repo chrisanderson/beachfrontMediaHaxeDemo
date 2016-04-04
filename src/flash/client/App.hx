@@ -1,6 +1,6 @@
 package flash.client;
 
-import common.client.util.BuildInfo;
+import common.client.signal.HeartBeatSignal;
 import flash.Lib;
 import flash.display.Sprite;
 import flash.text.TextField;
@@ -10,7 +10,7 @@ using DateTools;
 @:keep
 class App extends Sprite
 {
-  @inject public var buildInfo:BuildInfo;
+  @inject public var heartBeatSignal:HeartBeatSignal;
 
   private var _timeTextField:TextField;
 
@@ -24,22 +24,7 @@ class App extends Sprite
   @post //this method is called automatically because of @post metadata
   public function injectionsReady():Void
   {
-    //trace({'BuildInfo':BuildInfo});
-    //trace({'buildInfo':buildInfo});
-
-    if(_timeTextField == null)
-    {
-      _initUI();
-    }
-
-    if(buildInfo != null)
-    {
-      trace({'buildInfo.currentDateTime':buildInfo.currentDateTime});
-
-      _timeTextField.text = '[current date-time ${buildInfo.currentDateTime.format("%m/%d/%Y %r")}]';
-
-      trace({'_timeTextField.text':_timeTextField.text});
-    }
+    heartBeatSignal.add(_onHeartBeatSignal);
   }
 
   private function _init():Void
@@ -74,5 +59,17 @@ class App extends Sprite
     _timeTextField.wordWrap = true;
 
     addChild(_timeTextField);
+  }
+
+  private function _onHeartBeatSignal(eventType:String, value:Date):Void
+  {
+    if(eventType != HeartBeatSignal.CURRENT_DATE_TIME_UPDATED){return;}
+
+    _updateCurrentDateTimeTextField(value);
+  }
+
+  private function _updateCurrentDateTimeTextField(currentDateTime:Date):Void
+  {
+    _timeTextField.text = '[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]';
   }
 }

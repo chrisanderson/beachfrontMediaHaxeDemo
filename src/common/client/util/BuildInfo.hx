@@ -10,11 +10,6 @@ class BuildInfo
   public static var COMPILE_DATE_TIME_STRING = CompileTime.buildDate().toString();
   public static var LAST_RUN_DATE_TIME_STRING = Date.now().toString();
 
-  //this is readonly because the second param null blocks write access
-  public var currentDateTime(default, null) = Date.now();
-  //using (get, set) means you can override the default behavior if needed
-  //@:isVar public var currentDateTime(get, set) = Date.now();//try this'n to see compiler complain about missing getter and setter
-
   public function new()
   {
     _init();

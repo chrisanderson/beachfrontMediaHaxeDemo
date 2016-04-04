@@ -277,6 +277,9 @@ $hxClasses["common.client.CommonModel"] = common_client_CommonModel;
 common_client_CommonModel.__name__ = ["common","client","CommonModel"];
 common_client_CommonModel.prototype = {
 	injectionsReady: function() {
+		console.log({ 'buildInfo' : this.buildInfo});
+		console.log({ 'heartBeat' : this.heartBeat});
+		console.log({ 'settingsModel' : this.settingsModel});
 		this.settingsModel.settingsModelSignal.add($bind(this,this._onSettingsModelSignal));
 		var tempValue = 1;
 		console.log("tempValue: " + tempValue);
@@ -342,8 +345,10 @@ common_client_Main.prototype = {
 		this._mainInjector.mapSingleton(common_client_CommonModel);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsService);
+		this._mainInjector.mapSingleton(common_client_util_HeartBeat);
 		this._mainInjector.mapSingleton(common_client_signal_SettingsSignal);
 		this._mainInjector.mapSingleton(common_client_signal_SettingsModelSignal);
+		this._mainInjector.mapSingleton(common_client_signal_HeartBeatSignal);
 		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
 		this._app = this._mainInjector.instantiate(js_client_App);
 		this._initUI();
@@ -476,6 +481,15 @@ msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
 	}
 	,__class__: msignal_Signal2
 });
+var common_client_signal_HeartBeatSignal = function() {
+	msignal_Signal2.call(this);
+};
+$hxClasses["common.client.signal.HeartBeatSignal"] = common_client_signal_HeartBeatSignal;
+common_client_signal_HeartBeatSignal.__name__ = ["common","client","signal","HeartBeatSignal"];
+common_client_signal_HeartBeatSignal.__super__ = msignal_Signal2;
+common_client_signal_HeartBeatSignal.prototype = $extend(msignal_Signal2.prototype,{
+	__class__: common_client_signal_HeartBeatSignal
+});
 var common_client_signal_SettingsModelSignal = function() {
 	msignal_Signal2.call(this);
 };
@@ -495,7 +509,6 @@ common_client_signal_SettingsSignal.prototype = $extend(msignal_Signal2.prototyp
 	__class__: common_client_signal_SettingsSignal
 });
 var common_client_util_BuildInfo = $hx_exports.common.client.util.BuildInfo = function() {
-	this.currentDateTime = new Date();
 	this._init();
 };
 $hxClasses["common.client.util.BuildInfo"] = common_client_util_BuildInfo;
@@ -510,6 +523,24 @@ common_client_util_BuildInfo.prototype = {
 		console.log("LAST_RUN_DATE_TIME_STRING: " + common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING);
 	}
 	,__class__: common_client_util_BuildInfo
+};
+var common_client_util_HeartBeat = $hx_exports.common.client.util.HeartBeat = function() {
+	this._init();
+};
+$hxClasses["common.client.util.HeartBeat"] = common_client_util_HeartBeat;
+common_client_util_HeartBeat.__name__ = ["common","client","util","HeartBeat"];
+common_client_util_HeartBeat.prototype = {
+	_init: function() {
+	}
+	,injectionsReady: function() {
+		var timeTimer = new haxe_Timer(1000);
+		timeTimer.run = $bind(this,this._onTimerTick);
+	}
+	,_onTimerTick: function() {
+		common_client_util_HeartBeat.currentDateTime = new Date();
+		this.heartBeatSignal.dispatch("CURRENT_DATE_TIME_UPDATED",common_client_util_HeartBeat.currentDateTime);
+	}
+	,__class__: common_client_util_HeartBeat
 };
 var common_client_util_LoaderService = function() {
 };
@@ -640,6 +671,19 @@ haxe_Http.prototype = {
 	,onStatus: function(status) {
 	}
 	,__class__: haxe_Http
+};
+var haxe_Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+$hxClasses["haxe.Timer"] = haxe_Timer;
+haxe_Timer.__name__ = ["haxe","Timer"];
+haxe_Timer.prototype = {
+	run: function() {
+	}
+	,__class__: haxe_Timer
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
@@ -806,6 +850,7 @@ $hxClasses["js.client.App"] = js_client_App;
 js_client_App.__name__ = ["js","client","App"];
 js_client_App.prototype = {
 	injectionsReady: function() {
+		this.heartBeatSignal.add($bind(this,this._onHeartBeatSignal));
 		if(this._appTitleElement == null) this._initUI();
 	}
 	,_init: function() {
@@ -819,6 +864,13 @@ js_client_App.prototype = {
 		console.log({ '_swfContainerElement' : this._swfContainerElement});
 		this._compileDateTimeElement.text("[last compile date-time " + DateTools.format(common_client_util_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
 		window.console.log("this will only appear in the debug version of the js output");
+	}
+	,_onHeartBeatSignal: function(eventType,value) {
+		if(eventType != "CURRENT_DATE_TIME_UPDATED") return;
+		this._updateCurrentDateTimeElement(value);
+	}
+	,_updateCurrentDateTimeElement: function(currentDateTime) {
+		this._currentDateTimeElement.text("[current date-time " + DateTools.format(currentDateTime,"%m/%d/%Y %r") + "]");
 	}
 	,__class__: js_client_App
 };
@@ -1423,17 +1475,18 @@ Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
-common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, heartBeat : { type : ["common.client.util.HeartBeat"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, settingsModelSignal : { type : ["common.client.signal.SettingsModelSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_signal_HeartBeatSignal.CURRENT_DATE_TIME_UPDATED = "CURRENT_DATE_TIME_UPDATED";
 common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,3,21,24,17);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,4,12,27,31);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,3,21,24,17);
+	var _this = new Date(2016,3,4,12,27,31);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
@@ -1443,9 +1496,11 @@ common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING = (function($this) {
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
+common_client_util_HeartBeat.__meta__ = { fields : { heartBeatSignal : { type : ["common.client.signal.HeartBeatSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_util_HeartBeat.currentDateTime = new Date();
 haxe_IMap.__meta__ = { obj : { 'interface' : null}};
 js_Boot.__toStr = {}.toString;
-js_client_App.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, injectionsReady : { args : null, post : null}}};
+js_client_App.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, heartBeatSignal : { type : ["common.client.signal.HeartBeatSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
 minject_point_InjectionPoint.__meta__ = { obj : { 'interface' : null}};
 common_client_Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

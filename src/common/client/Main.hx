@@ -1,5 +1,7 @@
 package common.client;
 
+import common.client.util.HeartBeat;
+import common.client.signal.HeartBeatSignal;
 import common.client.signal.SettingsModelSignal;
 import common.client.signal.SettingsSignal;
 import common.client.util.BuildInfo;
@@ -110,8 +112,10 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapSingleton(CommonModel);
     _mainInjector.mapSingleton(SettingsModel);
     _mainInjector.mapSingleton(SettingsService);
+    _mainInjector.mapSingleton(HeartBeat);
     _mainInjector.mapSingleton(SettingsSignal);
     _mainInjector.mapSingleton(SettingsModelSignal);
+    _mainInjector.mapSingleton(HeartBeatSignal);
 
     _mainInjector.mapClass(LoaderService, LoaderService);
 

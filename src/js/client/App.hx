@@ -1,5 +1,6 @@
 package js.client;
 
+import common.client.signal.HeartBeatSignal;
 import common.client.util.BuildInfo;
 import jQuery.JQuery;
 import js.Browser;
@@ -10,6 +11,7 @@ using DateTools;
 class App
 {
   @inject public var buildInfo:BuildInfo;
+  @inject public var heartBeatSignal:HeartBeatSignal;
 
   private var _appTitleElement = new JQuery('.app-title');
   private var _compileDateTimeElement = new JQuery('.compile-date-time');
@@ -25,6 +27,8 @@ class App
   @post //this method is called automatically because of @post metadata
   public function injectionsReady():Void
   {
+    heartBeatSignal.add(_onHeartBeatSignal);
+
     if(_appTitleElement == null)
     {
       _initUI();
@@ -53,5 +57,17 @@ class App
     //haxe's ability to remove traces won't remove direct calls to console Browser.console.log()
     //but i added a gulp task to strip debug calls for the release target
     Browser.console.log("this will only appear in the debug version of the js output");
+  }
+
+  private function _onHeartBeatSignal(eventType:String, value:Date):Void
+  {
+    if(eventType != HeartBeatSignal.CURRENT_DATE_TIME_UPDATED){return;}
+
+    _updateCurrentDateTimeElement(value);
+  }
+
+  private function _updateCurrentDateTimeElement(currentDateTime:Date):Void
+  {
+    _currentDateTimeElement.text('[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]');
   }
 }

@@ -1,5 +1,6 @@
 package common.client;
 
+import common.client.util.HeartBeat;
 import common.client.settings.SettingsModel;
 import common.client.signal.SettingsModelSignal;
 import common.client.util.BuildInfo;
@@ -16,6 +17,7 @@ import js.Error;
 class CommonModel
 {
   @inject public var buildInfo:BuildInfo;
+  @inject public var heartBeat:HeartBeat;
   @inject public var settingsModel(default, never):SettingsModel;
 
   public function new()
@@ -26,19 +28,9 @@ class CommonModel
   @post //this method is called automatically because of @post metadata
   public function injectionsReady():Void
   {
-    //#if (flash || js)
-    //var timeTimer = new Timer(1000);
-    //timeTimer.run = function()
-    //{
-    //  _currentDateTime = Date.now();
-    //
-    //  #if js
-    //  tempCurrentDateTime.text('[current date-time ${_currentDateTime.format("%m/%d/%Y %r")}]');
-    //  #end
-    //}
-    //#end
-
-    //trace('buildInfo: $buildInfo');
+    trace({'buildInfo':buildInfo});
+    trace({'heartBeat':heartBeat});
+    trace({'settingsModel':settingsModel});
 
     settingsModel.settingsModelSignal.add(_onSettingsModelSignal);
 
