@@ -37,7 +37,7 @@ class SettingsService
 
     _settings = Json.parse(result);
 
-    //trace({'_onSettingsLoadSuccess() _settings':_settings});
+    trace({'_onSettingsLoadSuccess() _settings':_settings});
 
     settingsSignal.dispatch(SettingsSignal.LOAD_SUCCESS, _settings);
   }

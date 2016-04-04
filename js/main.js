@@ -365,6 +365,7 @@ common_client_settings_SettingsModel.prototype = {
 	,_init: function() {
 		console.log("_init()");
 		this.settingsSignal.add($bind(this,this._onSettingsSignal));
+		this.settingsService.loadSettings("runtime/test.json");
 	}
 	,_onSettingsSignal: function(eventType,value) {
 		if(eventType != "LOAD_SUCCESS") return;
@@ -382,6 +383,14 @@ $hxClasses["common.client.settings.SettingsService"] = common_client_settings_Se
 common_client_settings_SettingsService.__name__ = ["common","client","settings","SettingsService"];
 common_client_settings_SettingsService.prototype = {
 	injectionsReady: function() {
+	}
+	,loadSettings: function(url) {
+		this.loaderService.loadFromUrl(url,$bind(this,this._onSettingsLoadSuccess));
+	}
+	,_onSettingsLoadSuccess: function(result) {
+		this._settings = JSON.parse(result);
+		console.log({ '_onSettingsLoadSuccess() _settings' : this._settings});
+		this.settingsSignal.dispatch("LOAD_SUCCESS",this._settings);
 	}
 	,__class__: common_client_settings_SettingsService
 };
@@ -1421,10 +1430,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,2,21,18,29);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,3,21,24,17);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,2,21,18,29);
+	var _this = new Date(2016,3,3,21,24,17);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

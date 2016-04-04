@@ -29,7 +29,7 @@ class SettingsModel
 
     settingsSignal.add(_onSettingsSignal);
 
-    //settingsService.loadSettings('runtime/test.json');
+    settingsService.loadSettings('runtime/test.json');
     //settingsService.loadSettings('runtime/testBroken.json');
     //settingsService.loadSettings('nonExisting.json');
   }
