@@ -10,9 +10,6 @@ typedef Settings =
   var msg:String;
 
   var data:SettingsDataProp;
-  //var data:Dynamic = {
-  //  var id:String;
-  //};
 }
 
 //@:keep

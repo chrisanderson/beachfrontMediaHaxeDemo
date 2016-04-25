@@ -277,8 +277,8 @@ $hxClasses["common.client.CommonModel"] = common_client_CommonModel;
 common_client_CommonModel.__name__ = ["common","client","CommonModel"];
 common_client_CommonModel.prototype = {
 	injectionsReady: function() {
+		console.log({ 'mainInjector' : this.mainInjector});
 		console.log({ 'buildInfo' : this.buildInfo});
-		console.log({ 'heartBeat' : this.heartBeat});
 		console.log({ 'settingsModel' : this.settingsModel});
 		this.settingsModel.settingsModelSignal.add($bind(this,this._onSettingsModelSignal));
 		var tempValue = 1;
@@ -341,6 +341,7 @@ common_client_Main.prototype = {
 	}
 	,_initInjector: function() {
 		console.log("_initInjector()");
+		this._mainInjector.mapSingleton(minject_Injector,"main");
 		this._mainInjector.mapSingleton(common_client_util_BuildInfo);
 		this._mainInjector.mapSingleton(common_client_CommonModel);
 		this._mainInjector.mapSingleton(common_client_settings_SettingsModel);
@@ -349,15 +350,33 @@ common_client_Main.prototype = {
 		this._mainInjector.mapSingleton(common_client_signal_SettingsSignal);
 		this._mainInjector.mapSingleton(common_client_signal_SettingsModelSignal);
 		this._mainInjector.mapSingleton(common_client_signal_HeartBeatSignal);
-		this._mainInjector.mapClass(common_client_util_LoaderService,common_client_util_LoaderService);
+		this._mainInjector.mapClass(common_client_service_LoaderService,common_client_service_LoaderService);
 		this._app = this._mainInjector.instantiate(js_client_App);
 		this._initUI();
-		this._mainInjector.instantiate(common_client_CommonModel);
 	}
 	,_initUI: function() {
 		console.log("_initUI()");
 	}
 	,__class__: common_client_Main
+};
+var common_client_service_LoaderService = function() {
+};
+$hxClasses["common.client.service.LoaderService"] = common_client_service_LoaderService;
+common_client_service_LoaderService.__name__ = ["common","client","service","LoaderService"];
+common_client_service_LoaderService.prototype = {
+	loadFromUrl: function(url,onDataCallback,onErrorCallback) {
+		var tempHttp = new haxe_Http(url);
+		if(onDataCallback != null) tempHttp.onData = onDataCallback; else tempHttp.onData = $bind(this,this._onHttpData);
+		if(onErrorCallback != null) tempHttp.onError = onErrorCallback; else tempHttp.onError = $bind(this,this._onHttpError);
+		tempHttp.request(false);
+	}
+	,_onHttpData: function(result) {
+		console.log("_onHttpData() result: " + result);
+	}
+	,_onHttpError: function(result) {
+		console.log("_onHttpError() result: " + result);
+	}
+	,__class__: common_client_service_LoaderService
 };
 var common_client_settings_SettingsModel = function() {
 };
@@ -530,36 +549,17 @@ var common_client_util_HeartBeat = $hx_exports.common.client.util.HeartBeat = fu
 $hxClasses["common.client.util.HeartBeat"] = common_client_util_HeartBeat;
 common_client_util_HeartBeat.__name__ = ["common","client","util","HeartBeat"];
 common_client_util_HeartBeat.prototype = {
-	_init: function() {
-	}
-	,injectionsReady: function() {
+	injectionsReady: function() {
 		var timeTimer = new haxe_Timer(1000);
 		timeTimer.run = $bind(this,this._onTimerTick);
+	}
+	,_init: function() {
 	}
 	,_onTimerTick: function() {
 		common_client_util_HeartBeat.currentDateTime = new Date();
 		this.heartBeatSignal.dispatch("CURRENT_DATE_TIME_UPDATED",common_client_util_HeartBeat.currentDateTime);
 	}
 	,__class__: common_client_util_HeartBeat
-};
-var common_client_util_LoaderService = function() {
-};
-$hxClasses["common.client.util.LoaderService"] = common_client_util_LoaderService;
-common_client_util_LoaderService.__name__ = ["common","client","util","LoaderService"];
-common_client_util_LoaderService.prototype = {
-	loadFromUrl: function(url,onDataCallback,onErrorCallback) {
-		var tempHttp = new haxe_Http(url);
-		if(onDataCallback != null) tempHttp.onData = onDataCallback; else tempHttp.onData = $bind(this,this._onHttpData);
-		if(onErrorCallback != null) tempHttp.onError = onErrorCallback; else tempHttp.onError = $bind(this,this._onHttpError);
-		tempHttp.request(false);
-	}
-	,_onHttpData: function(result) {
-		console.log("_onHttpData() result: " + result);
-	}
-	,_onHttpError: function(result) {
-		console.log("_onHttpError() result: " + result);
-	}
-	,__class__: common_client_util_LoaderService
 };
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -1475,18 +1475,18 @@ Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
-common_client_CommonModel.__meta__ = { fields : { buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, heartBeat : { type : ["common.client.util.HeartBeat"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_CommonModel.__meta__ = { fields : { mainInjector : { type : ["minject.Injector"], inject : ["main"]}, buildInfo : { type : ["common.client.util.BuildInfo"], inject : null}, heartBeat : { type : ["common.client.util.HeartBeat"], inject : null}, settingsModel : { type : ["common.client.settings.SettingsModel"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_settings_SettingsModel.__meta__ = { fields : { settingsService : { type : ["common.client.settings.SettingsService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, settingsModelSignal : { type : ["common.client.signal.SettingsModelSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
-common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.util.LoaderService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
+common_client_settings_SettingsService.__meta__ = { fields : { loaderService : { type : ["common.client.service.LoaderService"], inject : null}, settingsSignal : { type : ["common.client.signal.SettingsSignal"], inject : null}, injectionsReady : { args : null, post : null}}};
 common_client_signal_HeartBeatSignal.CURRENT_DATE_TIME_UPDATED = "CURRENT_DATE_TIME_UPDATED";
 common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,4,12,27,31);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,25,17,30,9);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,4,12,27,31);
+	var _this = new Date(2016,3,25,17,30,9);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

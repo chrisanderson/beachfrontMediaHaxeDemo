@@ -1,6 +1,6 @@
 package flash.client;
 
-import common.client.signal.HeartBeatSignal;
+import flash.client.AppModel;
 import flash.Lib;
 import flash.display.Sprite;
 import flash.text.TextField;
@@ -10,7 +10,7 @@ using DateTools;
 @:keep
 class App extends Sprite
 {
-  @inject public var heartBeatSignal:HeartBeatSignal;
+  @inject public var model:AppModel;
 
   private var _timeTextField:TextField;
 
@@ -21,10 +21,10 @@ class App extends Sprite
     _init();
   }
 
-  @post //this method is called automatically because of @post metadata
+  @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
-    heartBeatSignal.add(_onHeartBeatSignal);
+    trace(model);
   }
 
   private function _init():Void
@@ -59,13 +59,6 @@ class App extends Sprite
     _timeTextField.wordWrap = true;
 
     addChild(_timeTextField);
-  }
-
-  private function _onHeartBeatSignal(eventType:String, value:Date):Void
-  {
-    if(eventType != HeartBeatSignal.CURRENT_DATE_TIME_UPDATED){return;}
-
-    _updateCurrentDateTimeTextField(value);
   }
 
   private function _updateCurrentDateTimeTextField(currentDateTime:Date):Void

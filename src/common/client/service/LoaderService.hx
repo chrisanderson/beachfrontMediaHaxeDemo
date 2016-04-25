@@ -1,4 +1,4 @@
-package common.client.util;
+package common.client.service;
 
 import haxe.Http;
 import tink.core.Outcome;

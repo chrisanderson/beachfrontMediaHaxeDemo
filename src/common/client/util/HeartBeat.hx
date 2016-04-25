@@ -19,12 +19,7 @@ class HeartBeat
     _init();
   }
 
-  private function _init():Void
-  {
-    //
-  }
-
-  @post //this method is called automatically because of @post metadata
+  @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
     #if (flash || js)
@@ -32,6 +27,11 @@ class HeartBeat
 
     timeTimer.run = _onTimerTick;
     #end
+  }
+
+  private function _init():Void
+  {
+    //
   }
 
   private function _onTimerTick():Void

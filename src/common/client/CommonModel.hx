@@ -1,5 +1,6 @@
 package common.client;
 
+import minject.Injector;
 import common.client.util.HeartBeat;
 import common.client.settings.SettingsModel;
 import common.client.signal.SettingsModelSignal;
@@ -16,6 +17,7 @@ import js.Error;
 @:expose
 class CommonModel
 {
+  @inject('main') public var mainInjector:Injector;//injecting the main injector instance
   @inject public var buildInfo:BuildInfo;
   @inject public var heartBeat:HeartBeat;
   @inject public var settingsModel(default, never):SettingsModel;
@@ -25,11 +27,11 @@ class CommonModel
     _init();
   }
 
-  @post //this method is called automatically because of @post metadata
+  @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
+    trace({'mainInjector':mainInjector});
     trace({'buildInfo':buildInfo});
-    trace({'heartBeat':heartBeat});
     trace({'settingsModel':settingsModel});
 
     settingsModel.settingsModelSignal.add(_onSettingsModelSignal);

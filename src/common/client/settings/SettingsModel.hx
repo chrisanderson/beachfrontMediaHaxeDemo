@@ -17,7 +17,7 @@ class SettingsModel
   {
   }
 
-  @post //this method is called automatically because of @post metadata
+  @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
     _init();

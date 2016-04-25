@@ -5,13 +5,14 @@ import common.client.signal.HeartBeatSignal;
 import common.client.signal.SettingsModelSignal;
 import common.client.signal.SettingsSignal;
 import common.client.util.BuildInfo;
-import common.client.util.LoaderService;
+import common.client.service.LoaderService;
 import common.client.settings.*;
 import minject.Injector;
 
 #if flash
 import flash.Lib;
 import flash.client.App;
+import flash.client.AppModel;
 import flash.display.Sprite;
 import flash.events.Event;
 #elseif js
@@ -82,7 +83,8 @@ class Main #if flash extends Sprite #end
     trace({'tempSwfContainer':tempSwfContainer});
 
     //if you don't want to wrap a library in a haxe extern you can use haxe magic to directly write to a target
-    //here i use __js__ to write raw js.  the untyped keyword tells haxe to not try to use any typing logic and to just accept the code as is
+    //here i use __js__ to write raw js.  the untyped keyword tells the haxe compiler
+    //to not try to use any typing logic and to just accept the code as is
     var tempSwfObject = untyped __js__('swfobject.embedSWF("swf/main.swf", {0}, "50%", "100%", 10, null, {1}, {2})', tempSwfContainer, tempFlashVars, tempSwfParams);
     #elseif flash
     trace('stageWidth: ' + Lib.current.stage.stageWidth + ' stageHeight: ' + Lib.current.stage.stageHeight);
@@ -107,7 +109,7 @@ class Main #if flash extends Sprite #end
   {
     trace('_initInjector()');
 
-    //_mainInjector.mapSingleton(Injector, 'main');//fix here thought about passing an instance of the _mainInjector around
+    _mainInjector.mapSingleton(Injector, 'main');//thought about passing an instance of the _mainInjector around via CommonModel
     _mainInjector.mapSingleton(BuildInfo);
     _mainInjector.mapSingleton(CommonModel);
     _mainInjector.mapSingleton(SettingsModel);
@@ -120,6 +122,8 @@ class Main #if flash extends Sprite #end
     _mainInjector.mapClass(LoaderService, LoaderService);
 
     #if flash
+    _mainInjector.mapSingleton(AppModel);
+
     //_app = new App();
     //_mainInjector.injectInto(_app);
 
@@ -137,7 +141,7 @@ class Main #if flash extends Sprite #end
 
     //this these classes are intended to be used by both flash and js at the same time
     //and can be instantiated outside the conditional compiler logic that's client side specific
-    _mainInjector.instantiate(CommonModel);
+    //_mainInjector.instantiate(CommonModel);//commented out now that inject it into other models
   }
 
   private function _initUI():Void

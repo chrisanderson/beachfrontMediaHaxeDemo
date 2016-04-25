@@ -2,7 +2,7 @@ package common.client.settings;
 
 import common.client.signal.SettingsSignal;
 import common.client.settings.Settings;
-import common.client.util.LoaderService;
+import common.client.service.LoaderService;
 import haxe.Json;
 
 class SettingsService
@@ -16,7 +16,7 @@ class SettingsService
   {
   }
 
-  @post //this method is called automatically because of @post metadata
+  @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
   }
