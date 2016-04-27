@@ -17,6 +17,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 #elseif js
 import js.client.App;
+import js.client.AppModel;
 import js.Browser;
 #end
 
@@ -131,6 +132,8 @@ class Main #if flash extends Sprite #end
 
     _initUI();//fix here this should be called in _onAddedToStage
     #elseif js
+    _mainInjector.mapSingleton(AppModel);
+
     //_app = new App();
     //_mainInjector.injectInto(_app);
 

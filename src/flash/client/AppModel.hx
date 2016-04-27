@@ -12,17 +12,25 @@ class AppModel implements ICommon
   @inject public var commonModel:CommonModel;
   @inject public var heartBeatSignal(default, never):HeartBeatSignal;
 
-  public var currentDateTimeTextField(default, default):TextField;
+  public var currentDateTimeTextField(default, set):TextField;
 
   public function new()
   {
-    _updateCurrentDateTimeTextField(Date.now());
   }
 
   @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
     heartBeatSignal.add(_onHeartBeatSignal);
+  }
+
+  public function set_currentDateTimeTextField(value:TextField):TextField
+  {
+    currentDateTimeTextField = value;
+
+    _updateCurrentDateTimeTextField(Date.now());
+
+    return currentDateTimeTextField;
   }
 
   private function _onHeartBeatSignal(eventType:String, value:Date):Void
@@ -34,6 +42,8 @@ class AppModel implements ICommon
 
   private function _updateCurrentDateTimeTextField(currentDateTime:Date):Void
   {
+    if(currentDateTimeTextField == null){return;}
+
     currentDateTimeTextField.text = '[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]';
   }
 }
