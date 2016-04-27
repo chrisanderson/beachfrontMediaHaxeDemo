@@ -1483,10 +1483,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,25,17,30,9);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,26,20,32,24);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,25,17,30,9);
+	var _this = new Date(2016,3,26,20,32,24);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

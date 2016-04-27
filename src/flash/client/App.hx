@@ -5,8 +5,6 @@ import flash.Lib;
 import flash.display.Sprite;
 import flash.text.TextField;
 
-using DateTools;
-
 @:keep
 class App extends Sprite
 {
@@ -24,7 +22,9 @@ class App extends Sprite
   @post //this method is called automatically when injections are done because of @post metadata
   public function injectionsReady():Void
   {
-    trace(model);
+    //trace('model: ' + model);
+
+    model.currentDateTimeTextField = _timeTextField;
   }
 
   private function _init():Void
@@ -53,16 +53,11 @@ class App extends Sprite
     _timeTextField = new TextField();
     _timeTextField.width = 224;
     _timeTextField.height = 20;
-    _timeTextField.x = Lib.current.stage.width - _timeTextField.width - 15;
+    _timeTextField.x = Lib.current.stage.width - _timeTextField.width - 200;
     _timeTextField.y = 10;
     _timeTextField.border = false;
     _timeTextField.wordWrap = true;
 
     addChild(_timeTextField);
-  }
-
-  private function _updateCurrentDateTimeTextField(currentDateTime:Date):Void
-  {
-    _timeTextField.text = '[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]';
   }
 }

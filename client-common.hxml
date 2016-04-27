@@ -9,6 +9,7 @@ common.hxml
 -lib tink_url
 -lib tink_xml
 -lib compiletime
+-lib bindx
 
 #declaring my apps main entry (i tend to name it Main, but that's not mandatory)
 -main common.client.Main
