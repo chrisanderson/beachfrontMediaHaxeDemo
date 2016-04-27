@@ -27,6 +27,7 @@ class App
       _initUI();
     }
 
+    model.jsLogElement = _jsLogElement;
     model.compileDateTimeElement = _compileDateTimeElement;
     model.currentDateTimeElement = _currentDateTimeElement;
   }
@@ -44,6 +45,7 @@ class App
     trace({'_compileDateTimeElement':_compileDateTimeElement});
     trace({'_currentDateTimeElement':_currentDateTimeElement});
     trace({'_swfContainerElement':_swfContainerElement});
+    trace({'_jsLogElement':_jsLogElement});
 
     //haxe's ability to remove traces won't remove direct calls to console Browser.console.log()
     //but i added a gulp task to strip debug calls for the release target

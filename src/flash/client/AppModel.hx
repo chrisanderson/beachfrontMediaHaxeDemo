@@ -12,7 +12,7 @@ class AppModel implements ICommon
   @inject public var commonModel:CommonModel;
   @inject public var heartBeatSignal(default, never):HeartBeatSignal;
 
-  public var currentDateTimeTextField(default, set):TextField;
+  public var currentDateTimeTextField(null, set):TextField;
 
   public function new()
   {

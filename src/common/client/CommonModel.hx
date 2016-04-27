@@ -51,20 +51,6 @@ class CommonModel
 
     trace("tempValue: " + tempValue);
 
-    #if js
-    var tempJsLog = new JQuery('#jsLog');
-
-    trace({'tempJsLog':tempJsLog});
-
-    tempJsLog.append('<br> BuildInfo.BUILD_TARGET: ${BuildInfo.BUILD_TARGET}');
-    tempJsLog.append('<br> BuildInfo.COMPILE_DATE_TIME_STRING: ${BuildInfo.COMPILE_DATE_TIME_STRING}');
-    tempJsLog.append('<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: ${BuildInfo.LAST_RUN_DATE_TIME_STRING}');
-
-    //because we increment tempValue only in a debug build
-    //tempValue will be 3 for debug but 2 for release
-    tempJsLog.append('<br> tempValue: $tempValue');
-    #end
-
     var tempErrorMessage = 'error message thrown for trace';
     var tempError = null;
 

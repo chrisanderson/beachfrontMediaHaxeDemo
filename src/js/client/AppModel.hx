@@ -13,8 +13,9 @@ class AppModel implements ICommon
   @inject public var commonModel:CommonModel;
   @inject public var heartBeatSignal(default, never):HeartBeatSignal;
 
-  public var compileDateTimeElement(default, set):JQuery;
-  public var currentDateTimeElement(default, set):JQuery;
+  public var jsLogElement(null, set):JQuery;
+  public var compileDateTimeElement(null, set):JQuery;
+  public var currentDateTimeElement(null, set):JQuery;
 
   public function new()
   {
@@ -24,6 +25,17 @@ class AppModel implements ICommon
   public function injectionsReady():Void
   {
     heartBeatSignal.add(_onHeartBeatSignal);
+  }
+
+  public function set_jsLogElement(value:JQuery):JQuery
+  {
+    jsLogElement = value;
+
+    _logMessage('<br> BuildInfo.BUILD_TARGET: ${BuildInfo.BUILD_TARGET}');
+    _logMessage('<br> BuildInfo.COMPILE_DATE_TIME_STRING: ${BuildInfo.COMPILE_DATE_TIME_STRING}');
+    _logMessage('<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: ${BuildInfo.LAST_RUN_DATE_TIME_STRING}');
+
+    return jsLogElement;
   }
 
   public function set_compileDateTimeElement(value:JQuery):JQuery
@@ -59,5 +71,14 @@ class AppModel implements ICommon
     if(currentDateTimeElement == null){return;}
 
     currentDateTimeElement.text('[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]');
+  }
+
+  private function _logMessage(message:String):Void
+  {
+    if(jsLogElement == null){return;}
+
+    //because we increment tempValue only in a debug build
+    //tempValue will be 3 for debug but 2 for release
+    jsLogElement.append(message);
   }
 }
