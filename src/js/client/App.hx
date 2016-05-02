@@ -1,8 +1,10 @@
 package js.client;
 
+import js.client.DomCompletion;
 import jQuery.JQuery;
 import js.Browser;
 
+#if macro @:build(js.client.DomCompletion.build("http://api.haxe.org/"))#end
 @:keep
 class App
 {
@@ -17,6 +19,8 @@ class App
   public function new()
   {
     _init();
+
+    //App.idList.
   }
 
   @post //this method is called automatically when injections are done because of @post metadata

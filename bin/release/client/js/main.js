@@ -280,11 +280,6 @@ common_client_CommonModel.prototype = {
 		this.settingsModel.settingsModelSignal.add($bind(this,this._onSettingsModelSignal));
 		var tempValue = 1;
 		tempValue++;
-		var tempJsLog = $("#jsLog");
-		tempJsLog.append("<br> BuildInfo.BUILD_TARGET: " + common_client_util_BuildInfo.BUILD_TARGET);
-		tempJsLog.append("<br> BuildInfo.COMPILE_DATE_TIME_STRING: " + common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING);
-		tempJsLog.append("<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: " + common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING);
-		tempJsLog.append("<br> tempValue: " + tempValue);
 		var tempErrorMessage = "error message thrown for trace";
 		var tempError = null;
 		tempError = new Error("" + common_client_util_BuildInfo.COMPILE_TARGET + ": " + tempErrorMessage);
@@ -829,6 +824,7 @@ js_client_App.__name__ = ["js","client","App"];
 js_client_App.prototype = {
 	injectionsReady: function() {
 		if(this._appTitleElement == null) this._initUI();
+		this.model.set_jsLogElement(this._jsLogElement);
 		this.model.set_compileDateTimeElement(this._compileDateTimeElement);
 		this.model.set_currentDateTimeElement(this._currentDateTimeElement);
 	}
@@ -848,6 +844,13 @@ js_client_AppModel.prototype = {
 	injectionsReady: function() {
 		this.heartBeatSignal.add($bind(this,this._onHeartBeatSignal));
 	}
+	,set_jsLogElement: function(value) {
+		this.jsLogElement = value;
+		this._logMessage("<br> BuildInfo.BUILD_TARGET: " + common_client_util_BuildInfo.BUILD_TARGET);
+		this._logMessage("<br> BuildInfo.COMPILE_DATE_TIME_STRING: " + common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING);
+		this._logMessage("<br> BuildInfo.LAST_RUN_DATE_TIME_STRING: " + common_client_util_BuildInfo.LAST_RUN_DATE_TIME_STRING);
+		return this.jsLogElement;
+	}
 	,set_compileDateTimeElement: function(value) {
 		this.compileDateTimeElement = value;
 		this.compileDateTimeElement.text("[last compile date-time " + DateTools.format(common_client_util_BuildInfo.COMPILE_DATE_TIME,"%m/%d/%Y %r") + "]");
@@ -866,8 +869,12 @@ js_client_AppModel.prototype = {
 		if(this.currentDateTimeElement == null) return;
 		this.currentDateTimeElement.text("[current date-time " + DateTools.format(currentDateTime,"%m/%d/%Y %r") + "]");
 	}
+	,_logMessage: function(message) {
+		if(this.jsLogElement == null) return;
+		this.jsLogElement.append(message);
+	}
 	,__class__: js_client_AppModel
-	,__properties__: {set_currentDateTimeElement:"set_currentDateTimeElement",set_compileDateTimeElement:"set_compileDateTimeElement"}
+	,__properties__: {set_currentDateTimeElement:"set_currentDateTimeElement",set_compileDateTimeElement:"set_compileDateTimeElement",set_jsLogElement:"set_jsLogElement"}
 };
 var minject_ClassMap = function() {
 	this.map = new haxe_ds_StringMap();
@@ -1448,10 +1455,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,3,27,14,32,44);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,1,17,29,37);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,3,27,14,32,44);
+	var _this = new Date(2016,4,1,17,29,37);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
