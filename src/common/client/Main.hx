@@ -102,7 +102,7 @@ class Main #if flash extends Sprite #end
     trace('width: ' + width + ' height: ' + height);
 
     Lib.current.stage.addChild(this);
-    Lib.current.stage.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage, false, 0, true);
+    Lib.current.stage.addEventListener(Event.ADDED, _onAddedToStage, false, 0, true);
     #end
   }
 
@@ -129,8 +129,6 @@ class Main #if flash extends Sprite #end
     //_mainInjector.injectInto(_app);
 
     _app = _mainInjector.instantiate(App);
-
-    _initUI();//fix here this should be called in _onAddedToStage
     #elseif js
     _mainInjector.mapSingleton(AppModel);
 
@@ -161,7 +159,7 @@ class Main #if flash extends Sprite #end
   {
     trace('_onAddedToStage()');
 
-    Lib.current.stage.removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
+    Lib.current.stage.removeEventListener(Event.ADDED, _onAddedToStage);
 
     _initUI();
   }
