@@ -856,6 +856,31 @@ js_client_App.prototype = {
 	,_init: function() {
 		console.log("_init()");
 		this._initUI();
+		var tempObject = { id : 1, foo : "bar"};
+		console.log({ 'tempObject' : tempObject});
+		var tempObserver = new window.ObjectObserver(tempObject).open(function(added,removed,changed,getOldValueFn) {
+			Object.keys(added).forEach(function(property) {
+				property;
+				added[property];
+			});
+			Object.keys(removed).forEach(function(property1) {
+				property1;
+				getOldValueFn(property1);
+			});
+			Object.keys(changed).forEach(function(property2) {
+				property2;
+				changed[property2];
+				getOldValueFn(property2);
+				console.log("test33 property: " + property2 + " changed[property]: " + changed[property2]);
+			});
+		});
+		tempObject.id++;
+		Platform.performMicrotaskCheckpoint();
+		tempObject.id++;
+		Platform.performMicrotaskCheckpoint();
+		tempObject.id = 33;
+		Platform.performMicrotaskCheckpoint();
+		console.log({ 'tempObject' : tempObject});
 	}
 	,_initUI: function() {
 		console.log({ '_appTitleElement' : this._appTitleElement});
@@ -1517,10 +1542,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,4,17,11,5);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,4,20,52,46);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,4,4,17,11,5);
+	var _this = new Date(2016,4,4,20,52,46);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

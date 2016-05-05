@@ -29,9 +29,7 @@ class Main #if flash extends Sprite #end
 {
   private var _mainInjector = new Injector();
 
-  #if flash
-  private var _app:App;
-  #elseif js
+  #if (flash || js)
   private var _app:App;
   #end
 

@@ -1,8 +1,11 @@
 package js.client;
 
+import js.Browser;
 import js.client.DomCompletion;
 import jQuery.JQuery;
-import js.Browser;
+import js.client.externs.*;
+
+using js.client.externs.ObserverTransform;
 
 #if macro @:build(js.client.DomCompletion.build("http://api.haxe.org/"))#end
 @:keep
@@ -41,6 +44,56 @@ class App
     trace('_init()');
 
     _initUI();
+
+    var tempObject = {id:1, foo:'bar'};
+
+    trace({'tempObject':tempObject});
+
+    //var tempObserver = new ObjectObserver({id:1, foo:'bar'});
+
+    //trace({'tempObserver':tempObserver});
+    //
+    //tempObserver.open()
+    //{
+    //
+    //}
+
+    var tempObserver = untyped new ObjectObserver(tempObject)
+    .open(function(added, removed, changed, getOldValueFn)
+    {
+      Object.keys(added).forEach(function(property) {
+        property; // a property which has been been added to obj
+        added[property]; // its value
+      });
+      Object.keys(removed).forEach(function(property) {
+        property; // a property which has been been removed from obj
+        getOldValueFn(property); // its old value
+      });
+      Object.keys(changed).forEach(function(property) {
+        property; // a property on obj which has changed value.
+        changed[property]; // its value
+        getOldValueFn(property); // its old value
+
+        console.log('test33 property: ' + property + ' changed[property]: ' + changed[property]);
+      });
+    });
+
+    tempObject.id++;
+
+    //not real sure why this was required in chrome, thought it would use native Object.observe()
+    untyped Platform.performMicrotaskCheckpoint();
+
+    tempObject.id++;
+
+    //not real sure why this was required in chrome, thought it would use native Object.observe()
+    untyped Platform.performMicrotaskCheckpoint();
+
+    tempObject.id = 33;
+
+    //not real sure why this was required in chrome, thought it would use native Object.observe()
+    untyped Platform.performMicrotaskCheckpoint();
+
+    trace({'tempObject':tempObject});
   }
 
   private function _initUI():Void
