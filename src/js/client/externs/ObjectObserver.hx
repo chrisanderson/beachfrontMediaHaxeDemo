@@ -4,5 +4,5 @@ package js.client.externs;
 @:native("window.ObjectObserver")
 extern class ObjectObserver
 {
-  function new(object:Dynamic);
+  function new(object:Dynamic):Void;
 }

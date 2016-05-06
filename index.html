@@ -18,6 +18,11 @@
       background-color:#ddd;
       color:#333;
     }
+
+    video
+    {
+      display:none;
+    }
   </style>
 </head>
 
@@ -26,6 +31,9 @@
     <div class="app-title">beachfront media haxe demo</div>
     <div class="compile-date-time"></div>
   </h3>
+
+  <canvas id="canvas" width="340" height="200px">Video should render here in this'n tag</canvas>
+  <div id="videoContainer"></div>
 
   <div id="contentContainer" style="display:flex; flex-flow:row; height:2000px;/*vh;*/">
     <div id="swfContainer">

@@ -837,6 +837,8 @@ js_Browser.createXMLHttpRequest = function() {
 	throw new js__$Boot_HaxeError("Unable to create XMLHttpRequest object.");
 };
 var js_client_App = function() {
+	this._videoContainer = window.document.querySelector("#videoContainer");
+	this._canvasElement = window.document.querySelector("#canvas");
 	this._jsLogElement = $("#jsLog");
 	this._swfContainerElement = $("#swfContainer");
 	this._currentDateTimeElement = $(".current-date-time");
@@ -856,31 +858,6 @@ js_client_App.prototype = {
 	,_init: function() {
 		console.log("_init()");
 		this._initUI();
-		var tempObject = { id : 1, foo : "bar"};
-		console.log({ 'tempObject' : tempObject});
-		var tempObserver = new window.ObjectObserver(tempObject).open(function(added,removed,changed,getOldValueFn) {
-			Object.keys(added).forEach(function(property) {
-				property;
-				added[property];
-			});
-			Object.keys(removed).forEach(function(property1) {
-				property1;
-				getOldValueFn(property1);
-			});
-			Object.keys(changed).forEach(function(property2) {
-				property2;
-				changed[property2];
-				getOldValueFn(property2);
-				console.log("test33 property: " + property2 + " changed[property]: " + changed[property2]);
-			});
-		});
-		tempObject.id++;
-		Platform.performMicrotaskCheckpoint();
-		tempObject.id++;
-		Platform.performMicrotaskCheckpoint();
-		tempObject.id = 33;
-		Platform.performMicrotaskCheckpoint();
-		console.log({ 'tempObject' : tempObject});
 	}
 	,_initUI: function() {
 		console.log({ '_appTitleElement' : this._appTitleElement});
@@ -889,6 +866,38 @@ js_client_App.prototype = {
 		console.log({ '_swfContainerElement' : this._swfContainerElement});
 		console.log({ '_jsLogElement' : this._jsLogElement});
 		window.console.log("this will only appear in the debug version of the js output");
+		var _this = window.document;
+		this._videoElement = _this.createElement("video");
+		this._videoElement.id = "videoDynamic";
+		this._videoElement.src = "http://e736daa9861a3da5faf4-49d13c85de3b1b0658221edbffbf1629.r69.cf2.rackcdn.com/bigbuckbunny.mp4";
+		this._videoElement.autoplay = true;
+		this._videoElement.controls = true;
+		this._videoElement.loop = true;
+		this._videoContainer.appendChild(this._videoElement);
+		this._videoElement.addEventListener("progress",$bind(this,this._onVideoProgress),false);
+		this._videoElement.addEventListener("canplaythrough",$bind(this,this._onVideoLoaded),false);
+	}
+	,_onVideoProgress: function(event) {
+	}
+	,_onVideoLoaded: function(event) {
+		this._videoElement.pause();
+		this._canvasApp();
+	}
+	,_canvasApp: function() {
+		var _g = this;
+		var tempCanvasContext = this._canvasElement.getContext("2d",null);
+		var drawScreen = function() {
+			tempCanvasContext.fillStyle = "#555";
+			tempCanvasContext.fillRect(0,0,_g._canvasElement.width,_g._canvasElement.height);
+			tempCanvasContext.strokeStyle = "#000000";
+			tempCanvasContext.strokeRect(5,5,_g._canvasElement.width - 10,_g._canvasElement.height - 10);
+			tempCanvasContext.drawImage(_g._videoElement,10,10);
+		};
+		var timeTimer = new haxe_Timer(20);
+		timeTimer.run = function() {
+			drawScreen();
+		};
+		this._videoElement.play();
 	}
 	,__class__: js_client_App
 };
@@ -899,6 +908,7 @@ js_client_AppModel.__interfaces__ = [common_client_ICommon];
 js_client_AppModel.prototype = {
 	injectionsReady: function() {
 		this.heartBeatSignal.add($bind(this,this._onHeartBeatSignal));
+		this._init();
 	}
 	,set_jsLogElement: function(value) {
 		this.jsLogElement = value;
@@ -917,6 +927,33 @@ js_client_AppModel.prototype = {
 		this._updateCurrentDateTimeElement(new Date());
 		return this.currentDateTimeElement;
 	}
+	,_init: function() {
+		var tempObject = { id : 1, foo : "bar"};
+		console.log({ 'tempObject' : tempObject});
+		var tempObserver = new window.ObjectObserver(tempObject).open(function(added,removed,changed,getOldValueFn) {
+			Object.keys(added).forEach(function(property) {
+				property;
+				added[property];
+			});
+			Object.keys(removed).forEach(function(property1) {
+				property1;
+				getOldValueFn(property1);
+			});
+			Object.keys(changed).forEach(function(property2) {
+				property2;
+				changed[property2];
+				getOldValueFn(property2);
+				console.log("tempObserver.changed() property: " + property2 + " changed[property]: " + changed[property2]);
+			});
+		});
+		tempObject.id = -1;
+		Platform.performMicrotaskCheckpoint();
+		tempObject.id++;
+		Platform.performMicrotaskCheckpoint();
+		tempObject.id = 33;
+		Platform.performMicrotaskCheckpoint();
+		console.log({ 'tempObject' : tempObject});
+	}
 	,_onHeartBeatSignal: function(eventType,value) {
 		if(eventType != "CURRENT_DATE_TIME_UPDATED") return;
 		this._updateCurrentDateTimeElement(value);
@@ -924,6 +961,22 @@ js_client_AppModel.prototype = {
 	,_updateCurrentDateTimeElement: function(currentDateTime) {
 		if(this.currentDateTimeElement == null) return;
 		this.currentDateTimeElement.text("[current date-time " + DateTools.format(currentDateTime,"%m/%d/%Y %r") + "]");
+		var tempObserver = new window.ObjectObserver(this.currentDateTimeElement).open(function(added,removed,changed,getOldValueFn) {
+			Object.keys(added).forEach(function(property) {
+				property;
+				added[property];
+			});
+			Object.keys(removed).forEach(function(property1) {
+				property1;
+				getOldValueFn(property1);
+			});
+			Object.keys(changed).forEach(function(property2) {
+				property2;
+				changed[property2];
+				getOldValueFn(property2);
+				console.log("tempObserver.changed() property: " + property2 + " changed[property]: " + changed[property2]);
+			});
+		});
 	}
 	,_logMessage: function(message) {
 		if(this.jsLogElement == null) return;
@@ -1542,10 +1595,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,4,20,52,46);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,5,21,27,15);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,4,4,20,52,46);
+	var _this = new Date(2016,4,5,21,27,15);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

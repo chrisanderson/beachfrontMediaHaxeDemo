@@ -1,11 +1,12 @@
 package js.client;
 
+import haxe.Timer;
+import js.html.DivElement;
+import js.html.CanvasElement;
+import js.html.VideoElement;
 import js.Browser;
 import js.client.DomCompletion;
 import jQuery.JQuery;
-import js.client.externs.*;
-
-using js.client.externs.ObserverTransform;
 
 #if macro @:build(js.client.DomCompletion.build("http://api.haxe.org/"))#end
 @:keep
@@ -18,6 +19,10 @@ class App
   private var _currentDateTimeElement = new JQuery('.current-date-time');
   private var _swfContainerElement = new JQuery('#swfContainer');
   private var _jsLogElement = new JQuery('#jsLog');
+  private var _canvasElement:CanvasElement = cast Browser.document.querySelector('#canvas');
+  //private var _videoElement:VideoElement = cast Browser.document.querySelector('#video');
+  private var _videoElement:VideoElement;
+  private var _videoContainer:DivElement = cast Browser.document.querySelector('#videoContainer');
 
   public function new()
   {
@@ -44,56 +49,6 @@ class App
     trace('_init()');
 
     _initUI();
-
-    var tempObject = {id:1, foo:'bar'};
-
-    trace({'tempObject':tempObject});
-
-    //var tempObserver = new ObjectObserver({id:1, foo:'bar'});
-
-    //trace({'tempObserver':tempObserver});
-    //
-    //tempObserver.open()
-    //{
-    //
-    //}
-
-    var tempObserver = untyped new ObjectObserver(tempObject)
-    .open(function(added, removed, changed, getOldValueFn)
-    {
-      Object.keys(added).forEach(function(property) {
-        property; // a property which has been been added to obj
-        added[property]; // its value
-      });
-      Object.keys(removed).forEach(function(property) {
-        property; // a property which has been been removed from obj
-        getOldValueFn(property); // its old value
-      });
-      Object.keys(changed).forEach(function(property) {
-        property; // a property on obj which has changed value.
-        changed[property]; // its value
-        getOldValueFn(property); // its old value
-
-        console.log('test33 property: ' + property + ' changed[property]: ' + changed[property]);
-      });
-    });
-
-    tempObject.id++;
-
-    //not real sure why this was required in chrome, thought it would use native Object.observe()
-    untyped Platform.performMicrotaskCheckpoint();
-
-    tempObject.id++;
-
-    //not real sure why this was required in chrome, thought it would use native Object.observe()
-    untyped Platform.performMicrotaskCheckpoint();
-
-    tempObject.id = 33;
-
-    //not real sure why this was required in chrome, thought it would use native Object.observe()
-    untyped Platform.performMicrotaskCheckpoint();
-
-    trace({'tempObject':tempObject});
   }
 
   private function _initUI():Void
@@ -107,5 +62,58 @@ class App
     //haxe's ability to remove traces won't remove direct calls to console Browser.console.log()
     //but i added a gulp task to strip debug calls for the release target
     Browser.console.log("this will only appear in the debug version of the js output");
+
+    //setup the video logic
+    _videoElement = Browser.document.createVideoElement();
+    _videoElement.id = 'videoDynamic';
+    _videoElement.src = 'http://e736daa9861a3da5faf4-49d13c85de3b1b0658221edbffbf1629.r69.cf2.rackcdn.com/bigbuckbunny.mp4';
+    _videoElement.autoplay = true;
+    _videoElement.controls = true;
+    _videoElement.loop = true;
+
+    //_videoDynamicContainer = Browser.document.createDivElement();
+    //_videoDynamicContainer.id = 'videoDynamicContainer';
+
+    //Browser.document.body.appendChild(_videoDynamicContainer);
+    _videoContainer.appendChild(_videoElement);
+
+    _videoElement.addEventListener('progress', _onVideoProgress, false);
+    _videoElement.addEventListener('canplaythrough', _onVideoLoaded, false);
+  }
+
+  private function _onVideoProgress(event):Void
+  {
+    //
+  }
+
+  private function _onVideoLoaded(event):Void
+  {
+    _videoElement.pause();
+
+    _canvasApp();
+  }
+
+  private function _canvasApp():Void
+  {
+    var tempCanvasContext = _canvasElement.getContext2d();
+
+    function drawScreen()
+    {
+      tempCanvasContext.fillStyle = '#555';
+      tempCanvasContext.fillRect(0, 0, _canvasElement.width, _canvasElement.height);
+      tempCanvasContext.strokeStyle = '#000000';
+      tempCanvasContext.strokeRect(5, 5, _canvasElement.width - 10, _canvasElement.height - 10);
+
+      tempCanvasContext.drawImage(_videoElement, 10, 10);
+    }
+
+    var timeTimer = new Timer(20);
+
+    timeTimer.run = function()
+    {
+      drawScreen();
+    };
+
+    _videoElement.play();
   }
 }
