@@ -10,6 +10,8 @@
 
   <script src="lib/node_modules/swfobject-npm/swfobject/src/swfobject.js"></script>
   <script src="lib/node_modules/observe-js/src/observe.js"></script>
+  <script src="lib/node_modules/iphone-inline-video/dist/iphone-inline-video.common-js.js"></script>
+  <script src="lib/iphone-inline-video/dist/iphone-inline-video.browser.js"></script>
   <script src="lib/bower_components/jquery/dist/jquery.min.js"></script>
 
   <style>
@@ -20,6 +22,11 @@
     }
 
     video
+    {
+      /*display:none;*/
+    }
+
+    video::-webkit-media-controls-start-playback-button
     {
       display:none;
     }
@@ -32,8 +39,11 @@
     <div class="compile-date-time"></div>
   </h3>
 
-  <canvas id="canvas" width="340" height="200px">Video should render here in this'n tag</canvas>
-  <div id="videoContainer"></div>
+  <div style="display:flex; flex-flow:row; margin-bottom:10px">
+    <canvas id="canvas" width="340" height="200"></canvas>
+
+    <div id="videoContainer" style="margin-left:10px"></div>
+  </div>
 
   <div id="contentContainer" style="display:flex; flex-flow:row; height:2000px;/*vh;*/">
     <div id="swfContainer">

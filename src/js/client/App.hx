@@ -77,8 +77,12 @@ class App
     //Browser.document.body.appendChild(_videoDynamicContainer);
     _videoContainer.appendChild(_videoElement);
 
-    _videoElement.addEventListener('progress', _onVideoProgress, false);
-    _videoElement.addEventListener('canplaythrough', _onVideoLoaded, false);
+    //_videoElement.addEventListener('progress', _onVideoProgress, false);
+    //_videoElement.addEventListener('canplaythrough', _onVideoLoaded, false);
+
+    //iphone specific test using iphone-inline-video lib
+    untyped makeVideoPlayableInline(_videoElement, /* hasAudio */ false);
+    _videoElement.play();
   }
 
   private function _onVideoProgress(event):Void
@@ -97,12 +101,16 @@ class App
   {
     var tempCanvasContext = _canvasElement.getContext2d();
 
+    tempCanvasContext.fillStyle = '#555';
+    tempCanvasContext.fillRect(0, 0, _canvasElement.width, _canvasElement.height);
+
+    //tempCanvasContext.strokeStyle = '#eee';
+    //tempCanvasContext.strokeRect(5, 5, _canvasElement.width - 10, _canvasElement.height - 10);
+
     function drawScreen()
     {
-      tempCanvasContext.fillStyle = '#555';
-      tempCanvasContext.fillRect(0, 0, _canvasElement.width, _canvasElement.height);
-      tempCanvasContext.strokeStyle = '#000000';
-      tempCanvasContext.strokeRect(5, 5, _canvasElement.width - 10, _canvasElement.height - 10);
+      tempCanvasContext.fillStyle = '#fff';
+      tempCanvasContext.fillText("Video should render here in this'n canvas tag", 20, 20);
 
       tempCanvasContext.drawImage(_videoElement, 10, 10);
     }
@@ -114,6 +122,6 @@ class App
       drawScreen();
     };
 
-    _videoElement.play();
+    //_videoElement.play();
   }
 }

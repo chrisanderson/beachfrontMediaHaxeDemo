@@ -4,7 +4,9 @@
   "description": "test33",
   "main": "index.js",
   "repository": {},
-  "dependencies": {},
+  "dependencies": {
+    "iphone-inline-video": "^1.7.4"
+  },
   "devDependencies": {
     "swfobject-npm": "^2.3.0-1"
   },

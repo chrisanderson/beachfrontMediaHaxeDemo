@@ -874,8 +874,8 @@ js_client_App.prototype = {
 		this._videoElement.controls = true;
 		this._videoElement.loop = true;
 		this._videoContainer.appendChild(this._videoElement);
-		this._videoElement.addEventListener("progress",$bind(this,this._onVideoProgress),false);
-		this._videoElement.addEventListener("canplaythrough",$bind(this,this._onVideoLoaded),false);
+		makeVideoPlayableInline(this._videoElement,false);
+		this._videoElement.play();
 	}
 	,_onVideoProgress: function(event) {
 	}
@@ -886,18 +886,17 @@ js_client_App.prototype = {
 	,_canvasApp: function() {
 		var _g = this;
 		var tempCanvasContext = this._canvasElement.getContext("2d",null);
+		tempCanvasContext.fillStyle = "#555";
+		tempCanvasContext.fillRect(0,0,this._canvasElement.width,this._canvasElement.height);
 		var drawScreen = function() {
-			tempCanvasContext.fillStyle = "#555";
-			tempCanvasContext.fillRect(0,0,_g._canvasElement.width,_g._canvasElement.height);
-			tempCanvasContext.strokeStyle = "#000000";
-			tempCanvasContext.strokeRect(5,5,_g._canvasElement.width - 10,_g._canvasElement.height - 10);
+			tempCanvasContext.fillStyle = "#fff";
+			tempCanvasContext.fillText("Video should render here in this'n canvas tag",20,20);
 			tempCanvasContext.drawImage(_g._videoElement,10,10);
 		};
 		var timeTimer = new haxe_Timer(20);
 		timeTimer.run = function() {
 			drawScreen();
 		};
-		this._videoElement.play();
 	}
 	,__class__: js_client_App
 };
@@ -1595,10 +1594,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,5,21,27,15);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,11,16,14,24);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,4,5,21,27,15);
+	var _this = new Date(2016,4,11,16,14,24);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));
