@@ -874,8 +874,9 @@ js_client_App.prototype = {
 		this._videoElement.controls = true;
 		this._videoElement.loop = true;
 		this._videoContainer.appendChild(this._videoElement);
+		this._videoElement.addEventListener("progress",$bind(this,this._onVideoProgress),false);
+		this._videoElement.addEventListener("canplaythrough",$bind(this,this._onVideoLoaded),false);
 		makeVideoPlayableInline(this._videoElement,false);
-		this._videoElement.play();
 	}
 	,_onVideoProgress: function(event) {
 	}
@@ -897,6 +898,7 @@ js_client_App.prototype = {
 		timeTimer.run = function() {
 			drawScreen();
 		};
+		this._videoElement.play();
 	}
 	,__class__: js_client_App
 };
@@ -950,6 +952,7 @@ js_client_AppModel.prototype = {
 		tempObject.id++;
 		Platform.performMicrotaskCheckpoint();
 		tempObject.id = 33;
+		tempObject.foo = "baz";
 		Platform.performMicrotaskCheckpoint();
 		console.log({ 'tempObject' : tempObject});
 	}
@@ -960,7 +963,7 @@ js_client_AppModel.prototype = {
 	,_updateCurrentDateTimeElement: function(currentDateTime) {
 		if(this.currentDateTimeElement == null) return;
 		this.currentDateTimeElement.text("[current date-time " + DateTools.format(currentDateTime,"%m/%d/%Y %r") + "]");
-		var tempObserver = new window.ObjectObserver(this.currentDateTimeElement).open(function(added,removed,changed,getOldValueFn) {
+		var tempObserver = new window.ObjectObserver(currentDateTime).open(function(added,removed,changed,getOldValueFn) {
 			Object.keys(added).forEach(function(property) {
 				property;
 				added[property];
@@ -976,6 +979,7 @@ js_client_AppModel.prototype = {
 				console.log("tempObserver.changed() property: " + property2 + " changed[property]: " + changed[property2]);
 			});
 		});
+		Platform.performMicrotaskCheckpoint();
 	}
 	,_logMessage: function(message) {
 		if(this.jsLogElement == null) return;
@@ -1594,10 +1598,10 @@ common_client_signal_SettingsModelSignal.MODEL_UPDATED = "MODEL_UPDATED";
 common_client_signal_SettingsSignal.LOAD_SUCCESS = "LOAD_SUCCESS";
 common_client_util_BuildInfo.COMPILE_TARGET = "unkown hinson";
 common_client_util_BuildInfo.BUILD_TARGET = "unkown hinson";
-common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,11,16,14,24);
+common_client_util_BuildInfo.COMPILE_DATE_TIME = new Date(2016,4,16,15,20,13);
 common_client_util_BuildInfo.COMPILE_DATE_TIME_STRING = (function($this) {
 	var $r;
-	var _this = new Date(2016,4,11,16,14,24);
+	var _this = new Date(2016,4,16,15,20,13);
 	$r = HxOverrides.dateStr(_this);
 	return $r;
 }(this));

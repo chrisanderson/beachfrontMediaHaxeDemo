@@ -77,12 +77,12 @@ class App
     //Browser.document.body.appendChild(_videoDynamicContainer);
     _videoContainer.appendChild(_videoElement);
 
-    //_videoElement.addEventListener('progress', _onVideoProgress, false);
-    //_videoElement.addEventListener('canplaythrough', _onVideoLoaded, false);
+    _videoElement.addEventListener('progress', _onVideoProgress, false);
+    _videoElement.addEventListener('canplaythrough', _onVideoLoaded, false);
 
     //iphone specific test using iphone-inline-video lib
     untyped makeVideoPlayableInline(_videoElement, /* hasAudio */ false);
-    _videoElement.play();
+    //_videoElement.play();
   }
 
   private function _onVideoProgress(event):Void
@@ -122,6 +122,6 @@ class App
       drawScreen();
     };
 
-    //_videoElement.play();
+    _videoElement.play();
   }
 }

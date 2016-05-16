@@ -1,5 +1,6 @@
 package js.client;
 
+import haxe.CallStack;
 import common.client.util.BuildInfo;
 import common.client.ICommon;
 import common.client.CommonModel;
@@ -123,6 +124,7 @@ class AppModel implements ICommon
     untyped Platform.performMicrotaskCheckpoint();
 
     tempObject.id = 33;
+    tempObject.foo = 'baz';
 
     //not real sure why this was required in chrome, thought it would use native Object.observe()
     untyped Platform.performMicrotaskCheckpoint();
@@ -143,7 +145,7 @@ class AppModel implements ICommon
 
     currentDateTimeElement.text('[current date-time ${currentDateTime.format("%m/%d/%Y %r")}]');
 
-    var tempObserver = untyped new ObjectObserver(currentDateTimeElement)
+    var tempObserver = untyped new ObjectObserver(currentDateTime)
     .open(function(added, removed, changed, getOldValueFn)
           {
             Object.keys(added).forEach(function(property) {
@@ -162,6 +164,9 @@ class AppModel implements ICommon
               console.log('tempObserver.changed() property: ' + property + ' changed[property]: ' + changed[property]);
             });
           });
+
+    //not real sure why this was required in chrome, thought it would use native Object.observe()
+    untyped Platform.performMicrotaskCheckpoint();
   }
 
   private function _logMessage(message:String):Void
